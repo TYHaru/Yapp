@@ -144,6 +144,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	Bullet player_bullet[P_BULLET_MAX];
 	
 	SetTimer(hWnd, MOVE_TIMER_ID, 10, NULL);
+	SetTimer(hWnd, BULLET_TIMER_ID, 200, NULL); //ÃÑ¾Ë Å¸ÀÌ¸Ó
 
 	save[0] = ac;
 	save[1] = j_count1;
@@ -286,7 +287,8 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		EndPaint(hWnd, &ps);
 		return FALSE;
 	case WM_DESTROY:
-		KillTimer(hWnd,1);
+		KillTimer(hWnd, AC_TIMER_ID);
+		KillTimer(hWnd, 
 		PostQuitMessage(0);
 		break;
 	default:
