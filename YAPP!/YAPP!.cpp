@@ -178,7 +178,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		case WM_KEYDOWN:
 			switch(wParam)
 			{
-				case 'z'://위누르면 점프 2단까지 허용
+				case 'z': //위누르면 점프 2단까지 허용
 				case 'Z':
 					if(j_count1<2 && j_not<1.1)
 					{
@@ -240,15 +240,32 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 					}
 					return false;
 				case BULLET_TIMER_ID:
-					player_bullet[player_bullet_count].direction = player_bullet_direction;
-					if(player_bullet[player_bullet_count].direction == WW){
-						player_bullet[player_bullet_count].right = player[0].left;
-						player_bullet[player_bullet_count].left = player_bullet[player_bullet_count].right - BULLETSIZE;
+					if(GetAsyncKeyState(0x58) < 0) // X = Bullet
+					{
+						player_bullet[player_bullet_count].direction = player_bullet_direction;
+						if(player_bullet[player_bullet_count].direction == WW){
+							player_bullet[player_bullet_count].right = player[0].left;
+							player_bullet[player_bullet_count].left = player_bullet[player_bullet_count].right - P_BULLETSIZE;
+						}
+						else if(player_bullet[player_bullet_count].direction == EE){
+							player_bullet[player_bullet_count].left = player[0].right;
+							player_bullet[player_bullet_count].right = player_bullet[player_bullet_count].left + P_BULLETSIZE;
+						}
+						player_bullet[player_bullet_count].top = player[0].top - 11;
+						player_bullet[player_bullet_count].bottom = player_bullet[player_bullet_count].top + P_BULLETSIZE;
+						player_bullet_count++;
 					}
-					else if(player_bullet[player_bullet_count].direction == EE){
-						player_bullet[player_bullet_count].left = player[0].right;
-						player_bullet[player_bullet_count].right = player_bullet[player_bullet_count].left + BULLETSIZE;
-						
+					for(int i=0; i<player_bullet_count; i++){
+						if(player_bullet[i].direction == WW){
+							player_bullet[i].right -= 10;
+							player_bullet[i].left = player_bullet[i].right - P_BULLETSIZE;
+						}
+						else if(player_bullet[i].direction == EE){
+							player_bullet[i].left += 10;
+							player_bullet[i].right = player_bullet[i].left + P_BULLETSIZE;
+						}
+					}
+					return false;
 			}
 
 
