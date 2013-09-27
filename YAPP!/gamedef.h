@@ -2,6 +2,7 @@
 
 #define		PLAYERSIZE			20
 #define		BOXSIZE				30
+#define		BULLETSIZE			2
 #define		P_BULLET_MAX		20		//플레이어 총알 수 제한
 #define		O_BULLET_MAX		100		//맵 총알 수 제한
 #define		AC_TIMER_ID			1

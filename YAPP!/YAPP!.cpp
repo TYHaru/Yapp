@@ -141,7 +141,8 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	HBITMAP hOldBit,holdmap,holdchar; 
 	RECT rt={0,0,900,700};
 	static int player_bullet_direction;
-	Bullet player_bullet[P_BULLET_MAX];
+	static Bullet player_bullet[P_BULLET_MAX];
+	static int player_bullet_count = 0;
 	
 	SetTimer(hWnd, MOVE_TIMER_ID, 10, NULL);
 	SetTimer(hWnd, BULLET_TIMER_ID, 200, NULL); //총알 타이머
@@ -215,20 +216,22 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 						KillTimer(hWnd,2); 
 					return false;
 				case MOVE_TIMER_ID:
-					if(GetAsyncKeyState(VK_LEFT) & 0x8000) //왼쪽ㄱㄱ
+					if(GetAsyncKeyState(VK_LEFT) < 0) //왼쪽ㄱㄱ
 					{
 						if(LR_Crash(map, player, mapbox, LEFT)) // if 문 추가로 입력
 						{
+							player_bullet_direction == WW;
 							player[1].left = player[0].left;
 							player[0].left -= 3;
 							player[1].right = player[0].right;
 							player[0].right -= 3;
 						}
 					}
-					if(GetAsyncKeyState(VK_RIGHT) & 0x8000) //오른쪽 ㄱㄱ
+					if(GetAsyncKeyState(VK_RIGHT) < 0) //오른쪽 ㄱㄱ
 					{
 						if(LR_Crash(map, player, mapbox, RIGHT))//if 문 추가로 입력 (이동 불가하게 만듬)
 						{
+							player_bullet_direction == EE;
 							player[1].left = player[0].left;
 							player[0].left += 3;
 							player[1].right = player[0].right;
@@ -236,6 +239,16 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 						}
 					}
 					return false;
+				case BULLET_TIMER_ID:
+					player_bullet[player_bullet_count].direction = player_bullet_direction;
+					if(player_bullet[player_bullet_count].direction == WW){
+						player_bullet[player_bullet_count].right = player[0].left;
+						player_bullet[player_bullet_count].left = player_bullet[player_bullet_count].right - BULLETSIZE;
+					}
+					else if(player_bullet[player_bullet_count].direction == EE){
+						player_bullet[player_bullet_count].left = player[0].right;
+						player_bullet[player_bullet_count].right = player_bullet[player_bullet_count].left + BULLETSIZE;
+						
 			}
 
 
@@ -288,7 +301,8 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		return FALSE;
 	case WM_DESTROY:
 		KillTimer(hWnd, AC_TIMER_ID);
-		KillTimer(hWnd, 
+		KillTimer(hWnd, MOVE_TIMER_ID);
+		KillTimer(hWnd, BULLET_TIMER_ID);
 		PostQuitMessage(0);
 		break;
 	default:
