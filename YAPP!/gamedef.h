@@ -2,13 +2,9 @@
 
 #define		PLAYERSIZE			20
 #define		BOXSIZE				30
-#define		BULLETSIZE			2
-#define		P_BULLET_MAX		20		//플레이어 총알 수 제한
-#define		O_BULLET_MAX		100		//맵 총알 수 제한
 #define		AC_TIMER_ID			1
 #define		JUMP_TIMER_ID		2
 #define		MOVE_TIMER_ID		3
-#define		BULLET_TIMER_ID		4
 #define		LEFT				1
 #define		RIGHT				2
 #define		DIE					1
@@ -21,14 +17,6 @@
 #define		STAGE2_2			22
 #define		WIDTH				32
 #define		HEIGHT				22
-#define		NN					1		//북
-#define		NE					2		//북동
-#define		EE					3		//동
-#define		SE					4		//남동
-#define		SS					5		//남
-#define		SW					6		//남서
-#define		WW					7		//서
-#define		NW					8		//북서
 
 //구조체
 
@@ -67,14 +55,6 @@ typedef struct
 	int v;					//그냥속도(없이 가속도만 붙일경우 0		픽셀로 계산
 	char trapID;
 }TRAP;
-typedef struct{
-	int PE; //player이면 0, Enemy 이면 1 
-	int direction;
-	int left;
-	int right;
-	int top;
-	int bottom;
-}Bullet;
 
 
 //함수 원형
@@ -83,12 +63,13 @@ void trapf(TRAP *trap, Player *player, char (*map)[WIDTH]);			//트랩 펑션 함정을
 void tuto(Player *player, int *save, char (*map)[WIDTH], TRAP trap[],int * stage, MapBox (*mapbox)[WIDTH]);	//튜토리얼함수다
 void tuto2(Player *player, int *save, char (*map)[WIDTH], TRAP trap[], int * stage, MapBox (*mapbox)[WIDTH]);
 
-BOOL player_bullet_crash(Bullet (*bullet)[BULLET_MAX], Player *player, MapBox (*mapbox)[WIDTH]); //총알 충돌함수
+
 BOOL recognizer(Box a,Player player);								//인식범위를 결정하는 함수 인식범위 내에 들어오면 TRUE를 반환한다
 void insert_map(char (*map)[WIDTH], char (*c_map)[WIDTH], MapBox (*mapbox)[WIDTH]); //맵에 넣어줌
 void mapCheck2(Player *player, char (*map)[WIDTH], int *save);
 BOOL LR_Crash(char (*map)[WIDTH], Player *player, MapBox (*mapbox)[WIDTH], int key); //좌우 충돌 함수
 void FC_Crash(Player *player, char (*map)[WIDTH], int *save, MapBox (*mapbox)[WIDTH]); //상하 충돌 함수
 BOOL limit(char (*map)[WIDTH],Player player[], int key);
-BOOL trap_reco(TRAP trap,Player player[],int key);
+void trapf(TRAP *trap, Player *player, char (*map)[WIDTH], MapBox (*mapbox)[WIDTH]);
 void clear(int a,int b, int c, int d, Player * player,int * stage, int stagename);	//좌위우아래 순으로 초기화
+void FC_insert(MapBox (*mapbox)[WIDTH]);

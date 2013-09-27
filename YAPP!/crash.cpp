@@ -103,8 +103,8 @@ void FC_Crash(Player *player, char (*map)[WIDTH], int *save, MapBox (*mapbox)[WI
 	for(i=0; i<HEIGHT; i++){
 		for(j=0; j<WIDTH; j++){
 			if(mapbox[i][j].floor_check == 1){ //바닥일 때 검사
-				if(((mapbox[i][j].left < player[0].left) && (player[0].left < mapbox[i][j].right)) ||
-					((mapbox[i][j].left < player[0].right) && (player[0].right < mapbox[i][j].right))){ //플레이어의 좌우 위치 둘중 하나가 박스의 좌우좌표 안에 있을 때
+				if(((mapbox[i][j].left <= player[0].left) && (player[0].left <= mapbox[i][j].right)) ||
+					((mapbox[i][j].left <= player[0].right) && (player[0].right <= mapbox[i][j].right))){ //플레이어의 좌우 위치 둘중 하나가 박스의 좌우좌표 안에 있을 때
 						if((0 < player[0].bottom - mapbox[i][j].top) && (player[0].bottom - mapbox[i][j].top < 30)){
 							if(player[0].top >=player[1].top){
 								player[0].bottom = mapbox[i][j].top;
@@ -117,10 +117,10 @@ void FC_Crash(Player *player, char (*map)[WIDTH], int *save, MapBox (*mapbox)[WI
 				}
 			}
 			if(mapbox[i][j].ceiling_check == 1){
-				if(((mapbox[i][j].left < player[0].left) && (player[0].left < mapbox[i][j].right)) ||
-					((mapbox[i][j].left < player[0].right) && (player[0].right < mapbox[i][j].right))){ //플레이어의 좌우 위치 둘중 하나가 박스의 좌우좌표 안에 있을 때
-						if((-15 < player[0].top - mapbox[i][j].bottom) && (player[0].top - mapbox[i][j].bottom < 0)){
-							if(player[0].top < player[1].top){
+				if(((mapbox[i][j].left <= player[0].left) && (player[0].left <= mapbox[i][j].right)) ||
+					((mapbox[i][j].left <= player[0].right) && (player[0].right <= mapbox[i][j].right))){ //플레이어의 좌우 위치 둘중 하나가 박스의 좌우좌표 안에 있을 때
+						if((-30 < player[0].top - mapbox[i][j].bottom) && (player[0].top - mapbox[i][j].bottom < 0)){
+							if(player[0].top <player[1].top){
 								player[0].top = mapbox[i][j].bottom;
 								player[0].bottom = player[0].top + PLAYERSIZE;
 							}
@@ -130,5 +130,70 @@ void FC_Crash(Player *player, char (*map)[WIDTH], int *save, MapBox (*mapbox)[WI
 		}
 	}
 }
-//BOOL player_bullet_crash(Bullet (*player_bullet)[P_BULLET_MAX], Player *player, MapBox (*mapbox)[WIDTH]){
 
+/*BOOL limit(char (*map)[WIDTH],Player player[], int key)  //좌우 움직임 봉쇄
+{
+	int xLeft, xRight, yTop, yBottom;
+	xLeft = (*player).left/BOXSIZE;
+	xRight = (*player).right/BOXSIZE;
+	yTop = (*player).top/BOXSIZE;
+	yBottom = (*player).bottom/BOXSIZE;
+	if((*player).bottom%30==0)
+	{
+	//	yBottom-=1;
+	}
+	switch(key)
+	{
+	case LEFT:
+		if(yTop==yBottom)
+		{
+			if(map[yTop][xLeft-1]=='#')
+			{
+				if(map[yTop][xLeft]==' '&&(((*player).left-3)/30)==xLeft)
+				{
+					return TRUE;
+				}
+				return FALSE;
+			}
+		}
+		else if(yTop!=yBottom)
+		{
+			if(map[yTop][xLeft-1]=='#'||map[yTop-1][xLeft-1]=='#')
+			{
+				if(map[yTop][xLeft]==' '&&(((*player).left-3)/30)==xLeft)
+				{
+					return TRUE;
+				}
+				return FALSE;
+			}
+		}
+		break;
+	case RIGHT:
+		if(yTop==yBottom)
+		{
+			if(map[yTop][xRight+1]=='#')
+			{
+				if(map[yTop][xRight]==' '&&(((*player).right+3)/30)==xRight)
+				{
+					return TRUE;
+				}
+				return FALSE;
+			}
+		}
+		else if(yTop!=yBottom)
+		{
+			if(map[yTop][xRight+1]=='#'||map[yTop-1][xRight+1]=='#')
+			{
+				if(map[yTop][xRight]==' '&&(((*player).right+3)/30)==xRight)
+				{
+					return TRUE;
+				}
+				return FALSE;
+			}
+		}
+		break;
+	default:
+		return TRUE;
+	}
+	return TRUE;
+}*/

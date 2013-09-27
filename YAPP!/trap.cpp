@@ -3,7 +3,7 @@
 #include "YAPP!.h"
 #include "gamedef.h"
 	
-void trapf(TRAP *trap, Player *player, char (*map)[WIDTH])
+void trapf(TRAP *trap, Player *player, char (*map)[WIDTH], MapBox (*mapbox)[WIDTH])
 {
 	if( (*trap).count != 1&& (*trap).count != 2 && recognizer((*trap).reco,*player))						//인식범위 좌측 우측모두 0부터시작
 	{
@@ -11,6 +11,8 @@ void trapf(TRAP *trap, Player *player, char (*map)[WIDTH])
 			for(int j=0;j<(*trap).val;j++)				//지우는 것
 			{
 				map[(*trap).start+i][(*trap).hold+j]=' ';
+				mapbox[(*trap).start+i][(*trap).hold+j].value=' ';
+				FC_insert(mapbox);
 			}
 		(*trap).count=1;
 	}
