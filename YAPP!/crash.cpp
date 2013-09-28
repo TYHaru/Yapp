@@ -198,10 +198,10 @@ void FC_Crash(Player *player, char (*map)[WIDTH], int *save, MapBox (*mapbox)[WI
 	return TRUE;
 }*/
 
-BOOL player_bullet_crash(Bullet *player_bullet, MapBox (*mapbox)[WIDTH], Enemy *enemy, int *enemy_count, int *player_bullet_count){
+void player_bullet_crash(Bullet *player_bullet, MapBox (*mapbox)[WIDTH], Enemy *enemy, int *enemy_count, int *player_bullet_count){
 	int i, j, k;
 	int enemy_check[ENEMY_MAX]= {0}, bullet_check[P_BULLET_MAX] = {0};
-	int enemy_delete = 0, bullet_delete = 0;
+	int bullet_delete = 0;
 	for(i=0; i<player_bullet_count[0]; i++){
 		for(j=0; j<enemy_count[0]; j++){
 			if(player_bullet[i].left - enemy[j].right < 0){
@@ -209,7 +209,6 @@ BOOL player_bullet_crash(Bullet *player_bullet, MapBox (*mapbox)[WIDTH], Enemy *
 					if(player_bullet[i].top - enemy[j].bottom < 0){
 						if(player_bullet[i].bottom - enemy[j].top > 0){
 							enemy_check[j]	= 1;
-							enemy_delete++;
 							bullet_check[i] = 1;
 							enemy[j].HP--;
 						}
@@ -236,11 +235,29 @@ BOOL player_bullet_crash(Bullet *player_bullet, MapBox (*mapbox)[WIDTH], Enemy *
 	}
 	for(i=0; i<enemy_count[0]; i++){
 		if(enemy_check[i] == 1){
-			for(j=i; j<enemy_count[0]; j++){
-				enemy[j].left = enemy[j+1].left;
-				enemy[j].right = enemy[j+1].right;
-				enemy[j].top = enemy[j+1].top;
-				enemy[j].bottom = enemy[j+1].bottom;
-				enemy[j].HP = enemy[j+1].HP;
-
+			if(enemy[i].HP == 0){
+				for(j=i; j<enemy_count[0]; j++){
+					enemy[j].left = enemy[j+1].left;
+					enemy[j].right = enemy[j+1].right;
+					enemy[j].top = enemy[j+1].top;
+					enemy[j].bottom = enemy[j+1].bottom;
+					enemy[j].HP = enemy[j+1].HP;
+					enemy_count[0]--;
+				}
 			}
+		}
+	}
+	for(i=0; i<player_bullet_count[0]; i++){
+		if(bullet_check[i] == 1){
+			for(j=i; j<player_bullet_count[0]; j++){
+				player_bullet[j].PE = player_bullet[j+1].PE;
+				player_bullet[j].direction = player_bullet[j+1].direction;
+				player_bullet[j].left = player_bullet[j+1].left;
+				player_bullet[j].right = player_bullet[j+1].right;
+				player_bullet[j].top = player_bullet[j+1].top;
+				player_bullet[j].bottom = player_bullet[j+1].bottom;
+				player_bullet_count[0]--;
+			}
+		}
+	}
+}
