@@ -103,6 +103,7 @@
     <Image Include="YAPP!.ico" />
     <Image Include="케릭터.bmp" />
     <Image Include="타일1.bmp" />
+    <Image Include="피.bmp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -127,7 +127,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
 	static int ac=0,j_flag=0,j_not=0;
 	static float j_count1=0;
-	static Player player[2] = {{130,130,130+PLAYERSIZE,130+PLAYERSIZE} , {130,130,130+PLAYERSIZE,130+PLAYERSIZE}}; //player[0]는 현재위치 player[1]은 전위치
+	static Player player[2] = {{130,130,130+PLAYERSIZE,130+PLAYERSIZE,1} , {130,130,130+PLAYERSIZE,130+PLAYERSIZE,1}}; //player[0]는 현재위치 player[1]은 전위치
 	PAINTSTRUCT ps;
 	static HANDLE hTimer;
 	static char map[HEIGHT][WIDTH]={};
@@ -180,7 +180,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 			{
 				case 'z': //위누르면 점프 2단까지 허용
 				case 'Z':
-					if(j_count1<2 && j_not<1.1)
+					if(player[0].life==1 && j_count1<2 && j_not<1.1)
 					{
 						SetTimer(hWnd,JUMP_TIMER_ID,20,NULL);
 						j_not++;
@@ -216,26 +216,29 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 						KillTimer(hWnd,2); 
 					return false;
 				case MOVE_TIMER_ID:
-					if(GetAsyncKeyState(VK_LEFT) < 0) //왼쪽ㄱㄱ
+					if(player[0].life!=0)
 					{
-						if(LR_Crash(map, player, mapbox, LEFT)) // if 문 추가로 입력
+						if(GetAsyncKeyState(VK_LEFT) < 0) //왼쪽ㄱㄱ
 						{
-							player_bullet_direction == WW;
-							player[1].left = player[0].left;
-							player[0].left -= 3;
-							player[1].right = player[0].right;
-							player[0].right -= 3;
+							if(LR_Crash(map, player, mapbox, LEFT)) // if 문 추가로 입력
+							{
+								player_bullet_direction == WW;
+								player[1].left = player[0].left;
+								player[0].left -= 3;
+								player[1].right = player[0].right;
+								player[0].right -= 3;
+							}
 						}
-					}
-					if(GetAsyncKeyState(VK_RIGHT) < 0) //오른쪽 ㄱㄱ
-					{
-						if(LR_Crash(map, player, mapbox, RIGHT))//if 문 추가로 입력 (이동 불가하게 만듬)
+						if(GetAsyncKeyState(VK_RIGHT) < 0) //오른쪽 ㄱㄱ
 						{
-							player_bullet_direction == EE;
-							player[1].left = player[0].left;
-							player[0].left += 3;
-							player[1].right = player[0].right;
-							player[0].right += 3;
+							if(LR_Crash(map, player, mapbox, RIGHT))//if 문 추가로 입력 (이동 불가하게 만듬)
+							{
+								player_bullet_direction == EE;
+								player[1].left = player[0].left;
+								player[0].left += 3;
+								player[1].right = player[0].right;
+								player[0].right += 3;
+							}
 						}
 					}
 					return false;
@@ -277,7 +280,10 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 			hBitDC = CreateCompatibleDC(hdc);
 			mapDC = CreateCompatibleDC(hdc);
 			charDC = CreateCompatibleDC(hdc);
-			mapbit=LoadBitmap(hInst,MAKEINTRESOURCE(IDB_BITMAP1));
+			if(player[0].life==1)
+				mapbit=LoadBitmap(hInst,MAKEINTRESOURCE(IDB_BITMAP1));
+			else
+				mapbit=LoadBitmap(hInst,MAKEINTRESOURCE(IDB_BITMAP3));
 			hBit = LoadBitmap(hInst, MAKEINTRESOURCE(IDB_BITMAP2));
 			hOldBit = (HBITMAP)SelectObject(backDC, backbitmap);
 			holdmap = (HBITMAP)SelectObject(mapDC,hBit);
@@ -289,7 +295,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 				case TUTORIAL1:
 					if(trap[0].count==1)
 					{
-						BitBlt(backDC, trap[0].present-BOXSIZE, (trap[0].hold-1)*BOXSIZE, BOXSIZE, BOXSIZE, mapDC, 0, 0, SRCCOPY);
+						BitBlt(backDC, trap[0].present.left-BOXSIZE, trap[0].present.top-BOXSIZE, BOXSIZE, BOXSIZE, mapDC, 0, 0, SRCCOPY);
 					}
 					break;
 				case TUTORIAL2:
@@ -328,22 +334,4 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	return 0;
 }
 
-
-BOOL trap_reco(TRAP trap,Player player[],int key) //아직 다 못만듬
-{
-
-	switch(key)
-	{
-	case DIE:
-		
-		break;
-
-	case MOVE_LIMIT:
-
-		break;
-	default:
-		return -1;
-	}
-
-}
 

@@ -32,6 +32,14 @@
 #define		WW					7		//서
 #define		NW					8		//북서
 
+//trap관련 메크로
+#define		UDTYPE				1		//위에서 아래: 1 /아래에서 위 : 2 /좌에서 우 : 3 / 우에서 좌 : 4
+#define		DUTYPE				2
+#define		LRTYPE				3
+#define		RLTYPE				4
+
+
+
 //구조체
 
 typedef struct {                  //맵체크 구조체
@@ -48,6 +56,7 @@ typedef struct {					//플레이어 구조체
 	int top;
 	int right;
 	int bottom;
+	int life;
 }Player;
 typedef struct {						//박스 구조체
 	int left;
@@ -64,10 +73,11 @@ typedef struct
 	int hold;					//x좌표
 	int start;				//시작하는 y좌표
 	int end;				//끝나는 y좌표
-	int present;			//현재픽셀								픽셀로 계산
 	int ac;					//가속도 없을경우 0						픽셀로 계산
 	int v;					//그냥속도(없이 가속도만 붙일경우 0		픽셀로 계산
+	char type;				//위에서 아래: 1 /아래에서 위 : 2 /좌에서 우 : 3 / 우에서 좌 : 4
 	char trapID;
+	Box present;			//현재픽셀								픽셀로 계산
 }TRAP;
 typedef struct{
 	int PE; //player이면 0, Enemy 이면 1 
@@ -95,3 +105,4 @@ BOOL limit(char (*map)[WIDTH],Player player[], int key);
 void trapf(TRAP *trap, Player *player, char (*map)[WIDTH], MapBox (*mapbox)[WIDTH]);
 void clear(int a,int b, int c, int d, Player * player,int * stage, int stagename);	//좌위우아래 순으로 초기화
 void FC_insert(MapBox (*mapbox)[WIDTH]);
+BOOL trap_reco(TRAP trap,Player player[],int key);
