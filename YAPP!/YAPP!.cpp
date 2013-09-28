@@ -142,7 +142,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	RECT rt={0,0,900,700};
 	static int player_bullet_direction;
 	static Bullet player_bullet[P_BULLET_MAX];
-	static int player_bullet_count[1] = 0;
+	static int player_bullet_count[2] = {0};
 	static int enemy_count[1] = {0};
 	
 	SetTimer(hWnd, MOVE_TIMER_ID, 10, NULL);
@@ -300,6 +300,23 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 					}
 					break;
 				case TUTORIAL2:
+					if(trap[0].count==1)
+					{
+						for(int i=0;i<trap[0].val;i++)
+							for(int j=0;j<trap[0].hor;j++)
+							{
+								BitBlt(backDC, trap[0].present.left+(i-1)*BOXSIZE, trap[0].present.top+(j-1)*BOXSIZE, BOXSIZE, BOXSIZE, mapDC, 0, 0, SRCCOPY);
+							};
+
+					}
+					if(trap[1].count==1)
+					{
+						for(int i=0;i<trap[1].val;i++)
+							for(int j=0;j<trap[1].hor;j++)
+							{
+								BitBlt(backDC, trap[1].present.left+(i-1)*BOXSIZE, trap[1].present.top+(j-1)*BOXSIZE, BOXSIZE, BOXSIZE, mapDC, 0, 0, SRCCOPY);
+							}
+					}
 					break;
 			}
 			for(int i=0;i<HEIGHT-1;i++){

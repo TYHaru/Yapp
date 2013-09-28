@@ -65,7 +65,7 @@ void tuto(Player *player, int *save, char (*map)[WIDTH], TRAP trap[],int * stage
 	if(first==0)
 	{	
 		Box a={14*BOXSIZE,16*BOXSIZE,16*BOXSIZE,17*BOXSIZE};
-		TRAP inst={a,1,1,0,16,16,2,0,5,LRTYPE,MOVE_LIMIT}; //{인식범위, 사라지는 상자 가로,세로, 카운트(기본 0),x좌표, 시작하는좌표,끝나는좌표,가속도,속도}
+		TRAP inst={a,1,1,0,16,16,2,0,1,LRTYPE,MOVE_LIMIT}; //{인식범위, 사라지는 상자 가로,세로, 카운트(기본 0),x좌표, 시작하는좌표,끝나는좌표,가속도,속도}
 		trap[0]=inst;
 		insert_map(map, c_map, mapbox);
 		first++;
@@ -105,14 +105,23 @@ void tuto2(Player *player, int *save, char (*map)[WIDTH], TRAP trap[], int * sta
 		{' ','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#',' '},//19
 		{' ','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#',' '},//20
 		{' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' '}//21
-		//0 1   2   3   4   5   6   7   8   9   10  11  12  13  14  15  16  17  18  19  20  21  22  23  24  25  26  27  28  29  30 31  32
+		//0   1   2   3   4   5   6   7   8   9   10  11  12  13  14  15  16  17  18  19  20  21  22  23  24  25  26  27  28  29  30 31  32
 	};
 	clear(0,210,30,270,player,stage,TUTORIAL1);
 	if(first==0)
 	{
+		Box a[2]={{5*BOXSIZE,6*BOXSIZE,7*BOXSIZE,8*BOXSIZE},
+		{3*BOXSIZE,15*BOXSIZE,6*BOXSIZE,16*BOXSIZE}};
+		
+		TRAP inst[2]={{a[0],2,1,0,5,8,3,0,1,DUTYPE,MOVE_LIMIT},
+		{a[1],3,3,0,3,18,21,0,1,UDTYPE,MOVE_LIMIT}}; //{인식범위, 사라지는 상자 가로,세로, 카운트(기본 0),x좌표, 시작하는좌표,끝나는좌표,가속도,속도}
+		trap[0]=inst[0];
+		trap[1]=inst[1];
 		first++;
 		insert_map(map, c_map, mapbox);
 	}
+	trapf(&trap[0],player,map,mapbox,save);
+	trapf(&trap[1],player,map,mapbox,save);
 	FC_Crash(player, map, save, mapbox);
 
 	 
