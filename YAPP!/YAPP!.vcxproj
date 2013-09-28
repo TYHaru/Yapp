@@ -101,8 +101,11 @@
   <ItemGroup>
     <Image Include="small.ico" />
     <Image Include="YAPP!.ico" />
+    <Image Include="드래곤브래스.bmp" />
+    <Image Include="버튼.bmp" />
     <Image Include="케릭터.bmp" />
     <Image Include="타일1.bmp" />
+    <Image Include="튜토보스.bmp" />
     <Image Include="피.bmp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

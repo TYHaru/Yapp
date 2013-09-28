@@ -18,10 +18,13 @@
 #define		RIGHT				2
 #define		DIE					1
 #define		MOVE_LIMIT			2
+#define		TUTO				0
 #define		TUTORIAL1			01
 #define		TUTORIAL2			02
+#define		STAGE1				1
 #define		STAGE1_1			11
 #define		STAGE1_2			12
+#define		STAGE2				2
 #define		STAGE2_1			21
 #define		STAGE2_2			22
 #define		WIDTH				32
@@ -40,9 +43,14 @@
 #define		DUTYPE				2
 #define		LRTYPE				3
 #define		RLTYPE				4
+#define		RE					1		//재사용가능
+#define		NOT					0		//재사용 불가 이건 생략가능
 
-
-
+//BOSS관련 메크로
+#define		BOSSUP				100
+#define		BOSSRAID			101
+#define		BOSSFIRE			102
+#define		BEATBOSS			103
 //구조체
 
 typedef struct {                  //맵체크 구조체
@@ -80,8 +88,7 @@ typedef struct
 	int v;					//그냥속도(없이 가속도만 붙일경우 0		픽셀로 계산
 	char type;				//위에서 아래: UDTYPE /아래에서 위 : DUTYPE /좌에서 우 : LRTYPE / 우에서 좌 : RLTYPE
 	char key;
-	char trapID;
-
+	char recur;				//재사용가능?
 	Box present;			//현재픽셀								픽셀로 계산
 }TRAP;
 typedef struct{
@@ -118,3 +125,6 @@ void clear(int a,int b, int c, int d, Player * player,int * stage, int stagename
 void FC_insert(MapBox (*mapbox)[WIDTH]);
 BOOL trap_reco(TRAP trap,Player player[], int save[]);
 void moveLimit(TRAP trap,Player player[], int save[]);
+void DrawBlockTuto(HDC hdc,HDC backDC,HDC mapDC, TRAP trap[], int stage, HINSTANCE hInst);
+void tuto2Set(Player player[], TRAP trap[], char (*map)[WIDTH], MapBox (*mapbox)[WIDTH]);
+void bossRaid(Player player[], char (*map)[WIDTH], MapBox (*mapbox)[WIDTH],TRAP trap[]);
