@@ -142,7 +142,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	RECT rt={0,0,900,700};
 	static int player_bullet_direction;
 	static Bullet player_bullet[P_BULLET_MAX];
-	static int player_bullet_count[2] = {0};
+	static int player_bullet_count[1] = {0};
 	static int enemy_count[1] = {0};
 	
 	SetTimer(hWnd, MOVE_TIMER_ID, 10, NULL);
