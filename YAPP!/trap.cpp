@@ -13,9 +13,17 @@ void trapf(TRAP *trap, Player *player, char (*map)[WIDTH], MapBox (*mapbox)[WIDT
 		for(int i=0;i<(*trap).hor;i++)
 			for(int j=0;j<(*trap).val;j++)				//지우는 것
 			{
-				map[(*trap).start+i][(*trap).hold+j]=' ';
-				mapbox[(*trap).start+i][(*trap).hold+j].value=' ';
-				FC_insert(mapbox);
+				if(trap[0].type==UDTYPE||trap[0].type==DUTYPE)
+				{
+					map[(*trap).start+i][(*trap).hold+j]=' ';
+					mapbox[(*trap).start+i][(*trap).hold+j].value=' ';
+				}
+				else
+				{
+					map[(*trap).hold+i][(*trap).start+j]=' ';
+					mapbox[(*trap).hold+i][(*trap).start+j].value=' ';
+				}
+					FC_insert(mapbox);
 			}
 		if((*trap).type==LRTYPE||(*trap).type==LRTYPE)
 			(*trap).present=save_p[0]; 

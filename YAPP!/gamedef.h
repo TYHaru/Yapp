@@ -18,10 +18,13 @@
 #define		RIGHT				2
 #define		DIE					1
 #define		MOVE_LIMIT			2
+#define		TUTO				0
 #define		TUTORIAL1			01
 #define		TUTORIAL2			02
+#define		STAGE1				1
 #define		STAGE1_1			11
 #define		STAGE1_2			12
+#define		STAGE2				2
 #define		STAGE2_1			21
 #define		STAGE2_2			22
 #define		WIDTH				32
@@ -118,3 +121,4 @@ void clear(int a,int b, int c, int d, Player * player,int * stage, int stagename
 void FC_insert(MapBox (*mapbox)[WIDTH]);
 BOOL trap_reco(TRAP trap,Player player[], int save[]);
 void moveLimit(TRAP trap,Player player[], int save[]);
+void DrawBlockTuto(HDC backDC,HDC mapDC, TRAP trap[], int stage);
