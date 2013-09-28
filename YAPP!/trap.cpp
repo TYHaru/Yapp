@@ -115,7 +115,7 @@ void trapf(TRAP *trap, Player *player, char (*map)[WIDTH], MapBox (*mapbox)[WIDT
 	}
 	
 }
-void clear(int a,int b, int c, int d, Player * player,int * stage, int stagename)
+void clear(int a,int b, int c, int d, Player * player,int * stage, int stagename, Bullet *player_bullet, int *player_bullet_count)
 {
 	Box reco={a,b,c,d};
 			
