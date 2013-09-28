@@ -5,109 +5,109 @@
 	
 void trapf(TRAP *trap, Player *player, char (*map)[WIDTH], MapBox (*mapbox)[WIDTH], int save[])
 {
-	Box save_p[2]={{(*trap).start*BOXSIZE,(*trap).hold*BOXSIZE,(*trap).start*BOXSIZE+BOXSIZE*(*trap).val,(*trap).hold*BOXSIZE+BOXSIZE*(*trap).hor},
-	{(*trap).hold*BOXSIZE,(*trap).start*BOXSIZE,(*trap).hold*BOXSIZE+BOXSIZE*(*trap).val,(*trap).start*BOXSIZE+BOXSIZE*(*trap).hor}};
+	Box save_p[2]={{trap[0].start*BOXSIZE,trap[0].hold*BOXSIZE,trap[0].start*BOXSIZE+BOXSIZE*trap[0].val,trap[0].hold*BOXSIZE+BOXSIZE*trap[0].hor},
+	{trap[0].hold*BOXSIZE,trap[0].start*BOXSIZE,trap[0].hold*BOXSIZE+BOXSIZE*trap[0].val,trap[0].start*BOXSIZE+BOXSIZE*trap[0].hor}};
 
-	if( (*trap).count != 1&& (*trap).count != 2 && recognizer((*trap).reco,*player))						//인식범위 좌측 우측모두 0부터시작
+	if( trap[0].count != 1&& trap[0].count != 2 && recognizer(trap[0].reco,*player))						//인식범위 좌측 우측모두 0부터시작
 	{
-		for(int i=0;i<(*trap).hor;i++)
-			for(int j=0;j<(*trap).val;j++)				//지우는 것
+		for(int i=0;i<trap[0].hor;i++)
+			for(int j=0;j<trap[0].val;j++)				//지우는 것
 			{
 				if(trap[0].type==UDTYPE||trap[0].type==DUTYPE)
 				{
-					map[(*trap).start+i][(*trap).hold+j]=' ';
-					mapbox[(*trap).start+i][(*trap).hold+j].value=' ';
+					map[trap[0].start+i][trap[0].hold+j]=' ';
+					mapbox[trap[0].start+i][trap[0].hold+j].value=' ';
 				}
 				else
 				{
-					map[(*trap).hold+i][(*trap).start+j]=' ';
-					mapbox[(*trap).hold+i][(*trap).start+j].value=' ';
+					map[trap[0].hold+i][trap[0].start+j]=' ';
+					mapbox[trap[0].hold+i][trap[0].start+j].value=' ';
 				}
 					FC_insert(mapbox);
 			}
-		if((*trap).type==LRTYPE||(*trap).type==LRTYPE)
-			(*trap).present=save_p[0]; 
+		if(trap[0].type==LRTYPE||trap[0].type==LRTYPE)
+			trap[0].present=save_p[0]; 
 		else
-			(*trap).present=save_p[1];
-		(*trap).count=1;
+			trap[0].present=save_p[1];
+		trap[0].count=1;
 	}
-	if((*trap).count==1)
+	if(trap[0].count==1)
 	{
-		switch((*trap).type)
+		switch(trap[0].type)
 		{
 		case RLTYPE:
-			if((*trap).present.left<(*trap).end*BOXSIZE)		
+			if(trap[0].present.left<trap[0].end*BOXSIZE)		
 			{
-				(*trap).present.left+=(*trap).v;
-				(*trap).present.right+=(*trap).v;
-				(*trap).v+=(*trap).ac;
-				if((*trap).present.left>=(*trap).end*BOXSIZE)
+				trap[0].present.left+=trap[0].v;
+				trap[0].present.right+=trap[0].v;
+				trap[0].v+=trap[0].ac;
+				if(trap[0].present.left>=trap[0].end*BOXSIZE)
 				{
-					(*trap).count=2;
+					trap[0].count=2;
 				}
 			}
 			break;
 		case UDTYPE:
-			if((*trap).present.top<(*trap).end*BOXSIZE)		
+			if(trap[0].present.top<trap[0].end*BOXSIZE)		
 			{
-				(*trap).present.top+=(*trap).v;
-				(*trap).present.bottom+=(*trap).v;
-				(*trap).v+=(*trap).ac;
-				if((*trap).present.top>=(*trap).end*BOXSIZE)
+				trap[0].present.top+=trap[0].v;
+				trap[0].present.bottom+=trap[0].v;
+				trap[0].v+=trap[0].ac;
+				if(trap[0].present.top>=trap[0].end*BOXSIZE)
 				{
-					(*trap).count=2;
+					trap[0].count=2;
 				}
 			}
 			break;
 		case LRTYPE:
 
-			if((*trap).present.left>(*trap).end*BOXSIZE)		
+			if(trap[0].present.left>trap[0].end*BOXSIZE)		
 			{
-				(*trap).present.left-=(*trap).v;
-				(*trap).present.right-=(*trap).v;
-				(*trap).v+=(*trap).ac;
-				if((*trap).present.left<=(*trap).end*BOXSIZE)
+				trap[0].present.left-=trap[0].v;
+				trap[0].present.right-=trap[0].v;
+				trap[0].v+=trap[0].ac;
+				if(trap[0].present.left<=trap[0].end*BOXSIZE)
 				{
-					(*trap).count=2;
+					trap[0].count=2;
 				}
 			}
 			break;
 		case DUTYPE:
-			if((*trap).present.top>(*trap).end*BOXSIZE)		
+			if(trap[0].present.top>trap[0].end*BOXSIZE)		
 			{
-				(*trap).present.top-=(*trap).v;
-				(*trap).present.bottom-=(*trap).v;
-				(*trap).v+=(*trap).ac;
-				if((*trap).present.top<=(*trap).end*BOXSIZE)
+				trap[0].present.top-=trap[0].v;
+				trap[0].present.bottom-=trap[0].v;
+				trap[0].v+=trap[0].ac;
+				if(trap[0].present.top<=trap[0].end*BOXSIZE)
 				{
-					(*trap).count=2;
+					trap[0].count=2;
 				}
 			}
 			break;
 		}
 		trap_reco(*trap,player,save);
 /*			
-		if((*trap).end>(*trap).start)					//만약 위에서 아래, 좌에서 우로 이동시	
+		if(trap[0].end>trap[0].start)					//만약 위에서 아래, 좌에서 우로 이동시	
 		{
-			if((*trap).present<(*trap).end*BOXSIZE)		
+			if(trap[0].present<trap[0].end*BOXSIZE)		
 			{
-				(*trap).present+=(*trap).v;
-				(*trap).v+=(*trap).ac;
-				if((*trap).present>=(*trap).end*BOXSIZE)
+				trap[0].present+=trap[0].v;
+				trap[0].v+=trap[0].ac;
+				if(trap[0].present>=trap[0].end*BOXSIZE)
 				{
-					(*trap).count=2;
+					trap[0].count=2;
 				}
 			}
 		}
-		else if((*trap).end<(*trap).start)			//만약 아래에서 위, 우에서 좌로 이동시
+		else if(trap[0].end<trap[0].start)			//만약 아래에서 위, 우에서 좌로 이동시
 		{
-			if((*trap).present>(*trap).end*BOXSIZE)		
+			if(trap[0].present>trap[0].end*BOXSIZE)		
 			{
-				(*trap).present-=(*trap).v;
-				(*trap).v+=(*trap).ac;
-				if((*trap).present<=(*trap).end*BOXSIZE)
+				trap[0].present-=trap[0].v;
+				trap[0].v+=trap[0].ac;
+				if(trap[0].present<=trap[0].end*BOXSIZE)
 				{
-					(*trap).count=2;
+					trap[0].count=2;
 				}
 			}
 		}
