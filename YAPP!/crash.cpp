@@ -197,3 +197,50 @@ void FC_Crash(Player *player, char (*map)[WIDTH], int *save, MapBox (*mapbox)[WI
 	}
 	return TRUE;
 }*/
+
+BOOL player_bullet_crash(Bullet *player_bullet, MapBox (*mapbox)[WIDTH], Enemy *enemy, int *enemy_count, int *player_bullet_count){
+	int i, j, k;
+	int enemy_check[ENEMY_MAX]= {0}, bullet_check[P_BULLET_MAX] = {0};
+	int enemy_delete = 0, bullet_delete = 0;
+	for(i=0; i<player_bullet_count[0]; i++){
+		for(j=0; j<enemy_count[0]; j++){
+			if(player_bullet[i].left - enemy[j].right < 0){
+				if(player_bullet[i].right - enemy[j].left > 0){
+					if(player_bullet[i].top - enemy[j].bottom < 0){
+						if(player_bullet[i].bottom - enemy[j].top > 0){
+							enemy_check[j]	= 1;
+							enemy_delete++;
+							bullet_check[i] = 1;
+							enemy[j].HP--;
+						}
+					}
+				}
+			}
+		}
+		for(j=0; j<HEIGHT; j++){
+			for(k=0; k<WIDTH; k++){
+				if(player_bullet[i].left - mapbox[i][j].right < 0){
+					if(player_bullet[i].right - mapbox[i][j].left > 0){
+						if(player_bullet[i].top - mapbox[i][j].bottom < 0){
+							if(player_bullet[i].bottom - mapbox[i][j].top > 0){
+								bullet_check[i] = 1;
+							}
+						}
+					}
+				}
+			}
+		}
+		if(bullet_check[i] == 1){
+			bullet_delete++;
+		}
+	}
+	for(i=0; i<enemy_count[0]; i++){
+		if(enemy_check[i] == 1){
+			for(j=i; j<enemy_count[0]; j++){
+				enemy[j].left = enemy[j+1].left;
+				enemy[j].right = enemy[j+1].right;
+				enemy[j].top = enemy[j+1].top;
+				enemy[j].bottom = enemy[j+1].bottom;
+				enemy[j].HP = enemy[j+1].HP;
+
+			}

@@ -142,7 +142,8 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	RECT rt={0,0,900,700};
 	static int player_bullet_direction;
 	static Bullet player_bullet[P_BULLET_MAX];
-	static int player_bullet_count = 0;
+	static int player_bullet_count[1] = 0;
+	static int enemy_count[1] = {0};
 	
 	SetTimer(hWnd, MOVE_TIMER_ID, 10, NULL);
 	SetTimer(hWnd, BULLET_TIMER_ID, 200, NULL); //ÃÑ¾Ë Å¸ÀÌ¸Ó
@@ -245,20 +246,20 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 				case BULLET_TIMER_ID:
 					if(GetAsyncKeyState(0x58) < 0) // X = Bullet
 					{
-						player_bullet[player_bullet_count].direction = player_bullet_direction;
-						if(player_bullet[player_bullet_count].direction == WW){
-							player_bullet[player_bullet_count].right = player[0].left;
-							player_bullet[player_bullet_count].left = player_bullet[player_bullet_count].right - P_BULLETSIZE;
+						player_bullet[player_bullet_count[0]].direction = player_bullet_direction;
+						if(player_bullet[player_bullet_count[0]].direction == WW){
+							player_bullet[player_bullet_count[0]].right = player[0].left;
+							player_bullet[player_bullet_count[0]].left = player_bullet[player_bullet_count[0]].right - P_BULLETSIZE;
 						}
-						else if(player_bullet[player_bullet_count].direction == EE){
-							player_bullet[player_bullet_count].left = player[0].right;
-							player_bullet[player_bullet_count].right = player_bullet[player_bullet_count].left + P_BULLETSIZE;
+						else if(player_bullet[player_bullet_count[0]].direction == EE){
+							player_bullet[player_bullet_count[0]].left = player[0].right;
+							player_bullet[player_bullet_count[0]].right = player_bullet[player_bullet_count[0]].left + P_BULLETSIZE;
 						}
-						player_bullet[player_bullet_count].top = player[0].top - 11;
-						player_bullet[player_bullet_count].bottom = player_bullet[player_bullet_count].top + P_BULLETSIZE;
-						player_bullet_count++;
+						player_bullet[player_bullet_count[0]].top = player[0].top - 11;
+						player_bullet[player_bullet_count[0]].bottom = player_bullet[player_bullet_count[0]].top + P_BULLETSIZE;
+						player_bullet_count[0]++;
 					}
-					for(int i=0; i<player_bullet_count; i++){
+					for(int i=0; i<player_bullet_count[0]; i++){
 						if(player_bullet[i].direction == WW){
 							player_bullet[i].right -= 10;
 							player_bullet[i].left = player_bullet[i].right - P_BULLETSIZE;

@@ -4,6 +4,9 @@
 #define		BOXSIZE				30
 #define		P_BULLETSIZE		2
 #define		O_BULLETSIZE		4
+#define		ENEMY_MAX			10
+#define		P_BULLETSIZE		2
+#define		O_BULLETSIZE		4
 #define		P_BULLET_MAX		20		//플레이어 총알 수 제한
 #define		O_BULLET_MAX		100		//맵 총알 수 제한
 #define		AC_TIMER_ID			1
@@ -89,7 +92,13 @@ typedef struct{
 	int top;
 	int bottom;
 }Bullet;
-
+typedef struct{
+	int HP; //체력
+	int left;
+	int right;
+	int top;
+	int bottom;
+}Enemy;
 
 //함수 원형
 void trapf(TRAP *trap, Player *player, char (*map)[WIDTH]);			//트랩 펑션 함정을 손쉽게 정의할 수 있는 함수다.
@@ -97,7 +106,7 @@ void trapf(TRAP *trap, Player *player, char (*map)[WIDTH]);			//트랩 펑션 함정을
 void tuto(Player *player, int *save, char (*map)[WIDTH], TRAP trap[],int * stage, MapBox (*mapbox)[WIDTH]);	//튜토리얼함수다
 void tuto2(Player *player, int *save, char (*map)[WIDTH], TRAP trap[], int * stage, MapBox (*mapbox)[WIDTH]);
 
-BOOL player_bullet_crash(Bullet (*bullet)[P_BULLET_MAX], Player *player, MapBox (*mapbox)[WIDTH]); //총알 충돌함수
+BOOL player_bullet_crash(Bullet *player_bullet, MapBox (*mapbox)[WIDTH], Enemy *enemy, int *enemy_count, int *player_bullet_count); //총알 충돌함수
 BOOL recognizer(Box a,Player player);								//인식범위를 결정하는 함수 인식범위 내에 들어오면 TRUE를 반환한다
 void insert_map(char (*map)[WIDTH], char (*c_map)[WIDTH], MapBox (*mapbox)[WIDTH]); //맵에 넣어줌
 void mapCheck2(Player *player, char (*map)[WIDTH], int *save);
