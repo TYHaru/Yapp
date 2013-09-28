@@ -72,5 +72,14 @@
     <Image Include="피.bmp">
       <Filter>리소스 파일</Filter>
     </Image>
+    <Image Include="버튼.bmp">
+      <Filter>리소스 파일</Filter>
+    </Image>
+    <Image Include="튜토보스.bmp">
+      <Filter>리소스 파일</Filter>
+    </Image>
+    <Image Include="드래곤브래스.bmp">
+      <Filter>리소스 파일</Filter>
+    </Image>
   </ItemGroup>
 </Project>

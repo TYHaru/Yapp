@@ -3,12 +3,10 @@
 #include "gamedef.h"
 
 #define MAX_LOADSTRING 100
-
 // 전역 변수:
 HINSTANCE hInst;	 // 현재 인스턴스입니다.
 TCHAR szTitle[MAX_LOADSTRING];	 // 제목 표시줄 텍스트입니다.
 TCHAR szWindowClass[MAX_LOADSTRING];	 // 기본 창 클래스 이름입니다.
-
 // 이 코드 모듈에 들어 있는 함수의 정방향 선언입니다.
 ATOM	 MyRegisterClass(HINSTANCE hInstance);
 BOOL	 InitInstance(HINSTANCE, int);
@@ -127,11 +125,11 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
 	static int ac=0,j_flag=0,j_not=0;
 	static float j_count1=0;
-	static Player player[2] = {{130,130,130+PLAYERSIZE,130+PLAYERSIZE,1} , {130,130,130+PLAYERSIZE,130+PLAYERSIZE,1}}; //player[0]는 현재위치 player[1]은 전위치
+	static Player player[2] = {{130,400,130+PLAYERSIZE,400+PLAYERSIZE,1} , {130,400,130+PLAYERSIZE,400+PLAYERSIZE,1}}; //player[0]는 현재위치 player[1]은 전위치
 	PAINTSTRUCT ps;
 	static HANDLE hTimer;
 	static char map[HEIGHT][WIDTH]={};
-	static int stage=TUTORIAL1, trapKey[10];
+	static int stage=TUTORIAL2, trapKey[10];
 	static TRAP trap[10];
 	static MapBox mapbox[HEIGHT][WIDTH] = {0};
 	int save[3] = {0};	 //save[0] = ac, save[1] = j_count1, save[2] = j_not
@@ -294,7 +292,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 			switch(stage/10)
 			{
 				case TUTO:
-					DrawBlockTuto(backDC,mapDC,trap,stage);
+					DrawBlockTuto(hdc,backDC,mapDC,trap,stage,hInst);
 			}
 			for(int i=0;i<HEIGHT-1;i++){
 				for(int j=0;j<WIDTH-1;j++)
