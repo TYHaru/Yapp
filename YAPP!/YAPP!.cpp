@@ -291,33 +291,10 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 			holdchar = (HBITMAP)SelectObject(charDC,mapbit);
 			SelectObject(backDC,hBit);
 			FillRect(backDC, &rt, (HBRUSH)GetStockObject(WHITE_BRUSH));
-			switch(stage)
+			switch(stage/10)
 			{
-				case TUTORIAL1:
-					if(trap[0].count==1)
-					{
-						BitBlt(backDC, trap[0].present.left-BOXSIZE, trap[0].present.top-BOXSIZE, BOXSIZE, BOXSIZE, mapDC, 0, 0, SRCCOPY);
-					}
-					break;
-				case TUTORIAL2:
-					if(trap[0].count==1)
-					{
-						for(int i=0;i<trap[0].val;i++)
-							for(int j=0;j<trap[0].hor;j++)
-							{
-								BitBlt(backDC, trap[0].present.left+(i-1)*BOXSIZE, trap[0].present.top+(j-1)*BOXSIZE, BOXSIZE, BOXSIZE, mapDC, 0, 0, SRCCOPY);
-							};
-
-					}
-					if(trap[1].count==1)
-					{
-						for(int i=0;i<trap[1].val;i++)
-							for(int j=0;j<trap[1].hor;j++)
-							{
-								BitBlt(backDC, trap[1].present.left+(i-1)*BOXSIZE, trap[1].present.top+(j-1)*BOXSIZE, BOXSIZE, BOXSIZE, mapDC, 0, 0, SRCCOPY);
-							}
-					}
-					break;
+				case TUTO:
+					DrawBlockTuto(backDC,mapDC,trap,stage);
 			}
 			for(int i=0;i<HEIGHT-1;i++){
 				for(int j=0;j<WIDTH-1;j++)

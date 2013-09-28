@@ -78,7 +78,32 @@ void tuto(Player *player, int *save, char (*map)[WIDTH], TRAP trap[],int * stage
 	FC_Crash(player, map, save, mapbox);
 	//mapCheck2(player, map, save);
 }
+void DrawBlockTuto(HDC backDC,HDC mapDC, TRAP trap[], int stage)
+{
+	switch(stage)
+			{
+				case TUTORIAL1:
+					if(trap[0].count==1)
+					{
+						BitBlt(backDC, trap[0].present.left-BOXSIZE, trap[0].present.top-BOXSIZE, BOXSIZE, BOXSIZE, mapDC, 0, 0, SRCCOPY);
+					}
+					break;
+				case TUTORIAL2:
+					for(int k=0;k<4;k++)
+					{
+						if(trap[k].count==1)
+						{
+							for(int i=0;i<trap[k].val;i++)
+								for(int j=0;j<trap[k].hor;j++)
+								{
+									BitBlt(backDC, trap[k].present.left+(i-1)*BOXSIZE, trap[k].present.top+(j-1)*BOXSIZE, BOXSIZE, BOXSIZE, mapDC, 0, 0, SRCCOPY);
+								};
 
+						}
+					}
+					break;
+			}
+}
 void tuto2(Player *player, int *save, char (*map)[WIDTH], TRAP trap[], int * stage, MapBox (*mapbox)[WIDTH])
 {
 	static int first=0;
@@ -110,19 +135,23 @@ void tuto2(Player *player, int *save, char (*map)[WIDTH], TRAP trap[], int * sta
 	clear(0,210,30,270,player,stage,TUTORIAL1);
 	if(first==0)
 	{
-		Box a[2]={{5*BOXSIZE,6*BOXSIZE,7*BOXSIZE,8*BOXSIZE},
-		{3*BOXSIZE,15*BOXSIZE,6*BOXSIZE,16*BOXSIZE}};
+		Box a[4]={{5*BOXSIZE,6*BOXSIZE,7*BOXSIZE,8*BOXSIZE},
+		{3*BOXSIZE,15*BOXSIZE,6*BOXSIZE,16*BOXSIZE},
+		{11*BOXSIZE,17*BOXSIZE,12*BOXSIZE,18*BOXSIZE},
+		{14*BOXSIZE,17*BOXSIZE,15*BOXSIZE,18*BOXSIZE}
+		};
 		
-		TRAP inst[2]={{a[0],2,1,0,5,8,3,0,1,DUTYPE,MOVE_LIMIT},
-		{a[1],3,3,0,3,18,21,0,1,UDTYPE,MOVE_LIMIT}}; //{인식범위, 사라지는 상자 가로,세로, 카운트(기본 0),x좌표, 시작하는좌표,끝나는좌표,가속도,속도}
-		trap[0]=inst[0];
-		trap[1]=inst[1];
+		TRAP inst[4]={{a[0],2,1,0,5,8,3,0,1,DUTYPE,MOVE_LIMIT},
+		{a[1],3,3,0,3,18,21,0,1,UDTYPE,MOVE_LIMIT},
+		{a[2],1,1,0,11,18,3,0,1,DUTYPE,MOVE_LIMIT},
+		{a[3],1,1,0,14,18,3,0,1,DUTYPE,MOVE_LIMIT}
+		}; //{인식범위, 사라지는 상자 가로,세로, 카운트(기본 0),x좌표, 시작하는좌표,끝나는좌표,가속도,속도}
+		for(int i=0;i<4;i++)
+			trap[i]=inst[i];
 		first++;
 		insert_map(map, c_map, mapbox);
 	}
-	trapf(&trap[0],player,map,mapbox,save);
-	trapf(&trap[1],player,map,mapbox,save);
-	FC_Crash(player, map, save, mapbox);
-
-	 
+	for(int i=0;i<4;i++)
+		trapf(&trap[i],player,map,mapbox,save);
+	FC_Crash(player, map, save, mapbox); 
 }
