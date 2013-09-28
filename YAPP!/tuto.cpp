@@ -241,6 +241,12 @@ void bossRaid(Player player[], char (*map)[WIDTH], MapBox (*mapbox)[WIDTH],TRAP 
 		else if (trap[5].present.bottom>=17*BOXSIZE-5)
 		{
 			trap[5].count=BOSSFIRE;
+			Box a={18*BOXSIZE,13*BOXSIZE,27*BOXSIZE,18*BOXSIZE};
+			if(recognizer(a,player[0]))
+			{
+				player[0].life=0;
+				player[1].life=0;
+			}
 		}
 		if(recognizer(button,*player))          //버튼을 밟을 경우 쿠파 터지면서 클리어
 		{
