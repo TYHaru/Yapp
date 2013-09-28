@@ -3,17 +3,17 @@
 #include "YAPP!.h"
 #include "gamedef.h"
 	
-void trapf(TRAP *trap, Player *player, char (*map)[WIDTH], MapBox (*mapbox)[WIDTH])
+void trapf(TRAP *trap, Player *player, char (*map)[WIDTH], MapBox (*mapbox)[WIDTH], int save[])
 {
-	Box save[2]={{(*trap).start*BOXSIZE,(*trap).hold*BOXSIZE,(*trap).start*BOXSIZE+BOXSIZE,(*trap).hold*BOXSIZE+BOXSIZE},
+	Box save_p[2]={{(*trap).start*BOXSIZE,(*trap).hold*BOXSIZE,(*trap).start*BOXSIZE+BOXSIZE,(*trap).hold*BOXSIZE+BOXSIZE},
 	{(*trap).hold*BOXSIZE,(*trap).start*BOXSIZE,(*trap).hold*BOXSIZE+BOXSIZE,(*trap).start*BOXSIZE+BOXSIZE}};
 	static int first=0;
 	if(first==0)
 	{
 		if((*trap).type==LRTYPE||(*trap).type==LRTYPE)
-			(*trap).present=save[0]; 
+			(*trap).present=save_p[0]; 
 		else
-			(*trap).present=save[1];
+			(*trap).present=save_p[1];
 		first++;
 	}
 	if( (*trap).count != 1&& (*trap).count != 2 && recognizer((*trap).reco,*player))						//인식범위 좌측 우측모두 0부터시작
@@ -44,7 +44,6 @@ void trapf(TRAP *trap, Player *player, char (*map)[WIDTH], MapBox (*mapbox)[WIDT
 			}
 			break;
 		case DUTYPE:
-
 			if((*trap).present.top<(*trap).end*BOXSIZE)		
 			{
 				(*trap).present.top+=(*trap).v;
@@ -82,6 +81,7 @@ void trapf(TRAP *trap, Player *player, char (*map)[WIDTH], MapBox (*mapbox)[WIDT
 			}
 			break;
 		}
+		trap_reco(*trap,player,save);
 /*			
 		if((*trap).end>(*trap).start)					//만약 위에서 아래, 좌에서 우로 이동시	
 		{
@@ -141,10 +141,10 @@ void clear(int a,int b, int c, int d, Player * player,int * stage, int stagename
 	}
 	return;
 }
-BOOL trap_reco(TRAP trap,Player player[],int key) //아직 다 못만듬
+BOOL trap_reco(TRAP trap,Player player[],  int save[]) //아직 다 못만듬
 {
 
-	switch(key)
+	switch(trap.key)
 	{
 	case DIE:
 		if((player[0].left <=trap.present.right && trap.present.left<=player[0].right) &&
@@ -156,11 +156,141 @@ BOOL trap_reco(TRAP trap,Player player[],int key) //아직 다 못만듬
 		break;
 
 	case MOVE_LIMIT:
-
+		if((player[0].left <=trap.present.right && trap.present.left<=player[0].right) &&
+			(player[0].top<=trap.present.bottom && trap.present.top<= player[0].bottom))
+		{
+			moveLimit(trap,player,save);
+		}
 		break;
 	default:
 		return -1;
 	}
 
+}
+void moveLimit(TRAP trap,Player player[], int save[])
+{
+	switch(trap.type)
+	{
+	case LRTYPE:
+		if(player[1].left>=trap.present.right)
+		{
+			player[0].left=trap.present.right;
+			player[0].right=player[0].left+PLAYERSIZE;
+			player[1].left=player[0].left+3;
+			player[1].right=player[0].right+3;
+			
+		}
+		else if(player[1].bottom<=trap.present.top)
+		{
+
+			player[0].bottom=trap.present.top;
+			player[0].top=player[0].bottom-PLAYERSIZE;
+			player[1].bottom=player[0].bottom;
+			player[1].top=player[0].top;
+			for(int k=0; k<3; k++){
+				save[k] = 0;
+			}
+			
+		}
+		else if(player[1].top>=trap.present.bottom)
+		{
+			player[0].top=trap.present.bottom;
+			player[0].bottom=player[0].top+PLAYERSIZE;
+			player[1].top=player[0].top;
+			player[1].bottom=player[0].bottom;
+			
+		}
+		else if(player[1].right>=trap.present.left)
+		{
+			player[0].left=player[1].left-3;
+			player[0].right=player[1].right-3;
+			player[1].left-=trap.v;
+			player[1].right-=trap.v;
+			
+		}
+		
+		break;
+	case RLTYPE:
+		if(player[1].left>=trap.present.right)
+		{
+			player[0].left=player[1].left;
+			player[0].right=player[1].right;
+			player[1].left+=trap.v;
+			player[1].right+=trap.v;
+		}
+		else if(player[1].bottom>=trap.present.top)
+		{
+			player[0].bottom=trap.present.top;
+			player[0].top=player[0].bottom-PLAYERSIZE;
+			for(int k=0; k<3; k++){
+				save[k] = 0;
+			}
+		}
+		else if(player[1].top<=trap.present.bottom)
+		{
+			player[0].top=trap.present.bottom;
+			player[0].bottom=player[0].top+PLAYERSIZE;
+		}
+		else if(player[1].right>=trap.present.left)
+		{
+			player[0].right=trap.present.left;
+			player[0].left=player[0].right-PLAYERSIZE;
+		}
+		break;
+	case UDTYPE:
+		if(player[1].left>=trap.present.right)
+		{
+			player[0].left=player[1].left;
+			player[0].right=player[1].right;
+			player[1].left+=trap.v;
+			player[1].right+=trap.v;
+		}
+		else if(player[1].bottom>=trap.present.top)
+		{
+			player[0].bottom=trap.present.top;
+			player[0].top=player[0].bottom-PLAYERSIZE;
+			for(int k=0; k<3; k++){
+				save[k] = 0;
+			}
+		}
+		else if(player[1].top<=trap.present.bottom)
+		{
+			player[0].top=trap.present.bottom;
+			player[0].bottom=player[0].top+PLAYERSIZE;
+		}
+		else if(player[1].right>=trap.present.left)
+		{
+			player[0].right=trap.present.left;
+			player[0].left=player[0].right-PLAYERSIZE;
+		}
+		break;
+	case DUTYPE:
+		if(player[1].left>=trap.present.right)
+		{
+			player[0].left=player[1].left;
+			player[0].right=player[1].right;
+			player[1].left+=trap.v;
+			player[1].right+=trap.v;
+		}
+		else if(player[1].bottom>=trap.present.top)
+		{
+			player[0].bottom=trap.present.top;
+			player[0].top=player[0].bottom-PLAYERSIZE;
+			for(int k=0; k<3; k++){
+				save[k] = 0;
+			}
+		}
+		else if(player[1].top<=trap.present.bottom)
+		{
+			player[0].top=trap.present.bottom;
+			player[0].bottom=player[0].top+PLAYERSIZE;
+		}
+		else if(player[1].right>=trap.present.left)
+		{
+			player[0].right=trap.present.left;
+			player[0].left=player[0].right-PLAYERSIZE;
+		}
+		break;
+	}
 }
 

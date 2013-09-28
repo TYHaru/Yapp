@@ -182,7 +182,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 				case 'Z':
 					if(player[0].life==1 && j_count1<2 && j_not<1.1)
 					{
-						SetTimer(hWnd,JUMP_TIMER_ID,20,NULL);
+						SetTimer(hWnd,JUMP_TIMER_ID,50,NULL);
 						j_not++;
 						ac=0;
 						j_flag=0;

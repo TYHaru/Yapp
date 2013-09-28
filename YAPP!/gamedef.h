@@ -75,8 +75,10 @@ typedef struct
 	int end;				//끝나는 y좌표
 	int ac;					//가속도 없을경우 0						픽셀로 계산
 	int v;					//그냥속도(없이 가속도만 붙일경우 0		픽셀로 계산
-	char type;				//위에서 아래: 1 /아래에서 위 : 2 /좌에서 우 : 3 / 우에서 좌 : 4
+	char type;				//위에서 아래: UDTYPE /아래에서 위 : DUTYPE /좌에서 우 : LRTYPE / 우에서 좌 : RLTYPE
+	char key;
 	char trapID;
+
 	Box present;			//현재픽셀								픽셀로 계산
 }TRAP;
 typedef struct{
@@ -102,7 +104,8 @@ void mapCheck2(Player *player, char (*map)[WIDTH], int *save);
 BOOL LR_Crash(char (*map)[WIDTH], Player *player, MapBox (*mapbox)[WIDTH], int key); //좌우 충돌 함수
 void FC_Crash(Player *player, char (*map)[WIDTH], int *save, MapBox (*mapbox)[WIDTH]); //상하 충돌 함수
 BOOL limit(char (*map)[WIDTH],Player player[], int key);
-void trapf(TRAP *trap, Player *player, char (*map)[WIDTH], MapBox (*mapbox)[WIDTH]);
+void trapf(TRAP *trap, Player *player, char (*map)[WIDTH], MapBox (*mapbox)[WIDTH], int save[]);
 void clear(int a,int b, int c, int d, Player * player,int * stage, int stagename);	//좌위우아래 순으로 초기화
 void FC_insert(MapBox (*mapbox)[WIDTH]);
-BOOL trap_reco(TRAP trap,Player player[],int key);
+BOOL trap_reco(TRAP trap,Player player[], int save[]);
+void moveLimit(TRAP trap,Player player[], int save[]);

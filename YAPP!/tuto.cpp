@@ -65,7 +65,7 @@ void tuto(Player *player, int *save, char (*map)[WIDTH], TRAP trap[],int * stage
 	if(first==0)
 	{	
 		Box a={14*BOXSIZE,16*BOXSIZE,16*BOXSIZE,17*BOXSIZE};
-		TRAP inst={a,1,1,0,16,16,2,0,5,LRTYPE}; //{인식범위, 사라지는 상자 가로,세로, 카운트(기본 0),x좌표, 시작하는좌표,끝나는좌표,현재픽셀,가속도,속도}
+		TRAP inst={a,1,1,0,16,16,2,0,5,LRTYPE,MOVE_LIMIT}; //{인식범위, 사라지는 상자 가로,세로, 카운트(기본 0),x좌표, 시작하는좌표,끝나는좌표,가속도,속도}
 		trap[0]=inst;
 		insert_map(map, c_map, mapbox);
 		first++;
@@ -73,8 +73,8 @@ void tuto(Player *player, int *save, char (*map)[WIDTH], TRAP trap[],int * stage
 
   // TODO: 여기에 그리기 코드를 추가합니다.
 
-	trapf(&trap[0],player,map,mapbox);
-	trap_reco(trap[0],player,DIE);
+	trapf(&trap[0],player,map,mapbox,save);
+
 	FC_Crash(player, map, save, mapbox);
 	//mapCheck2(player, map, save);
 }
