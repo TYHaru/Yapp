@@ -99,6 +99,7 @@
     <ResourceCompile Include="YAPP!.rc" />
   </ItemGroup>
   <ItemGroup>
+    <Image Include="Bullet.bmp" />
     <Image Include="small.ico" />
     <Image Include="YAPP!.ico" />
     <Image Include="드래곤브래스.bmp" />

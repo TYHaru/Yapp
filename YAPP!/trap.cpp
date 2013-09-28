@@ -5,10 +5,8 @@
 	
 void trapf(TRAP *trap, Player *player, char (*map)[WIDTH], MapBox (*mapbox)[WIDTH], int save[])
 {
-<<<<<<< HEAD
-	Box save_p[2]={{trap[0].start*BOXSIZE,trap[0].hold*BOXSIZE,trap[0].start*BOXSIZE+BOXSIZE*trap[0].val,trap[0].hold*BOXSIZE+BOXSIZE*trap[0].hor},
-	{trap[0].hold*BOXSIZE,trap[0].start*BOXSIZE,trap[0].hold*BOXSIZE+BOXSIZE*trap[0].val,trap[0].start*BOXSIZE+BOXSIZE*trap[0].hor}};
-=======
+ 
+ 
 	static int delay=10;
 	static TRAP trap_c=trap[0];
 	Box save_p[2]={{trap[0].start*BOXSIZE,trap[0].hold*BOXSIZE,trap[0].start*BOXSIZE+BOXSIZE*trap[0].val,trap[0].hold*BOXSIZE+BOXSIZE*trap[0].hor},
@@ -33,18 +31,18 @@ void trapf(TRAP *trap, Player *player, char (*map)[WIDTH], MapBox (*mapbox)[WIDT
 					FC_insert(mapbox);
 			}
 	}
->>>>>>> choi
+ 
 
 	if( trap[0].count != 1&& trap[0].count != 2 && recognizer(trap[0].reco,*player))						//인식범위 좌측 우측모두 0부터시작
 	{
 		for(int i=0;i<trap[0].hor;i++)
 			for(int j=0;j<trap[0].val;j++)				//지우는 것
 			{
-<<<<<<< HEAD
+ 
 				map[trap[0].start+i][trap[0].hold+j]=' ';
 				mapbox[trap[0].start+i][trap[0].hold+j].value=' ';
 				FC_insert(mapbox);
-=======
+ 
 				if(trap[0].type==UDTYPE||trap[0].type==DUTYPE)
 				{
 					map[trap[0].start+i][trap[0].hold+j]=' ';
@@ -56,7 +54,7 @@ void trapf(TRAP *trap, Player *player, char (*map)[WIDTH], MapBox (*mapbox)[WIDT
 					mapbox[trap[0].hold+i][trap[0].start+j].value=' ';
 				}
 					FC_insert(mapbox);
->>>>>>> choi
+ 
 			}
 		if(trap[0].type==LRTYPE||trap[0].type==LRTYPE)
 			trap[0].present=save_p[0]; 
@@ -73,12 +71,12 @@ void trapf(TRAP *trap, Player *player, char (*map)[WIDTH], MapBox (*mapbox)[WIDT
 			{
 				trap[0].present.left+=trap[0].v;
 				trap[0].present.right+=trap[0].v;
-<<<<<<< HEAD
+ 
 				trap[0].v+=trap[0].ac;
-=======
+ 
 				if((delay++)%100==0)
 					trap[0].v+=trap[0].ac;
->>>>>>> choi
+ 
 				if(trap[0].present.left>=trap[0].end*BOXSIZE)
 				{
 					trap[0].count=2;
@@ -90,12 +88,12 @@ void trapf(TRAP *trap, Player *player, char (*map)[WIDTH], MapBox (*mapbox)[WIDT
 			{
 				trap[0].present.top+=trap[0].v;
 				trap[0].present.bottom+=trap[0].v;
-<<<<<<< HEAD
+ 
 				trap[0].v+=trap[0].ac;
-=======
+ 
 				if((delay++)%100==0)
 					trap[0].v+=trap[0].ac;
->>>>>>> choi
+ 
 				if(trap[0].present.top>=trap[0].end*BOXSIZE)
 				{
 					trap[0].count=2;
@@ -108,12 +106,12 @@ void trapf(TRAP *trap, Player *player, char (*map)[WIDTH], MapBox (*mapbox)[WIDT
 			{
 				trap[0].present.left-=trap[0].v;
 				trap[0].present.right-=trap[0].v;
-<<<<<<< HEAD
+ 
 				trap[0].v+=trap[0].ac;
-=======
+ 
 				if((delay++)%100==0)
 					trap[0].v+=trap[0].ac;
->>>>>>> choi
+ 
 				if(trap[0].present.left<=trap[0].end*BOXSIZE)
 				{
 					trap[0].count=2;
@@ -125,12 +123,12 @@ void trapf(TRAP *trap, Player *player, char (*map)[WIDTH], MapBox (*mapbox)[WIDT
 			{
 				trap[0].present.top-=trap[0].v;
 				trap[0].present.bottom-=trap[0].v;
-<<<<<<< HEAD
+ 
 				trap[0].v+=trap[0].ac;
-=======
+ 
 				if((delay++)%100==0)
 					trap[0].v+=trap[0].ac;
->>>>>>> choi
+ 
 				if(trap[0].present.top<=trap[0].end*BOXSIZE)
 				{
 					trap[0].count=2;
@@ -139,7 +137,7 @@ void trapf(TRAP *trap, Player *player, char (*map)[WIDTH], MapBox (*mapbox)[WIDT
 			break;
 		}
 		trap_reco(*trap,player,save);
-<<<<<<< HEAD
+ 
 /*			
 		if(trap[0].end>trap[0].start)					//만약 위에서 아래, 좌에서 우로 이동시	
 		{
@@ -166,17 +164,27 @@ void trapf(TRAP *trap, Player *player, char (*map)[WIDTH], MapBox (*mapbox)[WIDT
 			}
 		}
 		*/
-=======
->>>>>>> choi
+ 
+ 
 	}
 	
 }
-void clear(int a,int b, int c, int d, Player * player,int * stage, int stagename)
+void clear(int a,int b, int c, int d, Player * player,int * stage, int stagename, Bullet *player_bullet, int *player_bullet_count, int *enemy_count)
 {
+	int i;
 	Box reco={a,b,c,d};
 			
 	if(recognizer(reco,*player))
 	{
+		for(i=0; i<player_bullet_count[0]; i++){
+			player_bullet[i].left = 0;
+			player_bullet[i].right = 0;
+			player_bullet[i].top = 0;
+			player_bullet[i].bottom = 0;
+			player_bullet[i].PE = 0;
+			player_bullet[i].direction = 0;
+		}
+		enemy_count[0] = 0;
 		(*stage)=stagename;
 		if(a==930)
 		{

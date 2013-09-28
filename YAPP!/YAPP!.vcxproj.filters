@@ -81,5 +81,8 @@
     <Image Include="드래곤브래스.bmp">
       <Filter>리소스 파일</Filter>
     </Image>
+    <Image Include="Bullet.bmp">
+      <Filter>리소스 파일</Filter>
+    </Image>
   </ItemGroup>
 </Project>

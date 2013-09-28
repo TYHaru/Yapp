@@ -4,7 +4,7 @@
 #include "gamedef.h"
 
 
-void tuto(Player *player, int *save, char (*map)[WIDTH], TRAP trap[],int * stage, MapBox (*mapbox)[WIDTH])
+void tuto(Player *player, int *save, char (*map)[WIDTH], TRAP trap[],int * stage, MapBox (*mapbox)[WIDTH], Bullet *player_bullet, int *player_bullet_count, int *enemy_count)
 {
 	static int first=0;
 	static char c_map[HEIGHT][WIDTH]={
@@ -32,7 +32,7 @@ void tuto(Player *player, int *save, char (*map)[WIDTH], TRAP trap[],int * stage
 	{' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' '}//21
 	// 0  1   2   3   4   5   6   7   8   9   10  11  12  13  14  15  16  17  18  19  20  21  22  23  24  25  26  27  28  29  30  31
 	};
-	clear(930,210,960,270,player,stage,TUTORIAL2);
+	clear(930,210,960,270,player,stage,TUTORIAL2, player_bullet, player_bullet_count, enemy_count);
 	if(first==0)
 	{	
 		Box a[2]={{13*BOXSIZE,16*BOXSIZE,16*BOXSIZE,17*BOXSIZE},
@@ -103,7 +103,16 @@ void DrawBlockTuto(HDC hdc,HDC backDC,HDC mapDC, TRAP trap[], int stage, HINSTAN
 					break;
 			}
 }
-void tuto2(Player *player, int *save, char (*map)[WIDTH], TRAP trap[], int * stage, MapBox (*mapbox)[WIDTH])
+void Draw_Bullet(HDC hdc, HDC backDC, Bullet *bullet, int *bullet_count, HINSTANCE hInst){
+	int i;
+	HDC BulletDC = CreateCompatibleDC(hdc);
+	HBITMAP Bulletbit = LoadBitmap(hInst,MAKEINTRESOURCE(IDB_BITMAP7));
+	SelectObject(BulletDC,Bulletbit);
+	for(i=0; i<bullet_count[0]; i++){
+		BitBlt(backDC, bullet[i].left, bullet[i].top, P_BULLETSIZE, P_BULLETSIZE, BulletDC, 0, 0, SRCCOPY);
+	}
+}
+void tuto2(Player *player, int *save, char (*map)[WIDTH], TRAP trap[],int * stage, MapBox (*mapbox)[WIDTH], Bullet *player_bullet, int *player_bullet_count, int *enemy_count)
 {
 	static int first=0;
 	static char c_map[HEIGHT][WIDTH]={
@@ -131,7 +140,7 @@ void tuto2(Player *player, int *save, char (*map)[WIDTH], TRAP trap[], int * sta
 		{' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' '}//21
 		//0   1   2   3   4   5   6   7   8   9   10  11  12  13  14  15  16  17  18  19  20  21  22  23  24  25  26  27  28  29  30 31  32
 	};
-	clear(0,210,30,270,player,stage,TUTORIAL1);
+	clear(0,210,30,270,player,stage,TUTORIAL1, player_bullet,player_bullet_count, enemy_count);
 	if(first==0)
 	{
 		Box a[4]={{5*BOXSIZE,6*BOXSIZE,7*BOXSIZE,8*BOXSIZE},

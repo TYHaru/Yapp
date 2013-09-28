@@ -125,11 +125,11 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
 	static int ac=0,j_flag=0,j_not=0;
 	static float j_count1=0;
-	static Player player[2] = {{130,400,130+PLAYERSIZE,400+PLAYERSIZE,1} , {130,400,130+PLAYERSIZE,400+PLAYERSIZE,1}}; //player[0]는 현재위치 player[1]은 전위치
+	static Player player[2] = {{130,130,130+PLAYERSIZE,130+PLAYERSIZE,1} , {130,130,130+PLAYERSIZE,130+PLAYERSIZE,1}}; //player[0]는 현재위치 player[1]은 전위치
 	PAINTSTRUCT ps;
 	static HANDLE hTimer;
 	static char map[HEIGHT][WIDTH]={};
-	static int stage=TUTORIAL2, trapKey[10];
+	static int stage=TUTORIAL1, trapKey[10];
 	static TRAP trap[10];
 	static MapBox mapbox[HEIGHT][WIDTH] = {0};
 	int save[3] = {0};	 //save[0] = ac, save[1] = j_count1, save[2] = j_not
@@ -153,10 +153,10 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	switch(stage)
 	{
 		case TUTORIAL1:
-			tuto(player, save, map,trap,&stage, mapbox);
+			tuto(player, save, map,trap,&stage, mapbox, player_bullet, player_bullet_count, enemy_count);
 			break;
 		case TUTORIAL2:
-			tuto2(player,save,map,trap, &stage, mapbox);
+			tuto2(player,save,map,trap, &stage, mapbox, player_bullet, player_bullet_count, enemy_count);
 			break;
 	}
 
@@ -303,6 +303,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 			}
 		}
 		BitBlt(backDC, player[0].left-BOXSIZE, player[0].top-BOXSIZE, PLAYERSIZE, PLAYERSIZE, charDC, 0, 0, SRCCOPY);
+		Draw_Bullet(hdc, backDC, player_bullet, player_bullet_count, hInst);
 		BitBlt(hdc,0,0,rt.right,rt.bottom,backDC,0,0,SRCCOPY);
 
 // TODO: 여기에 그리기 코드를 추가합니다.

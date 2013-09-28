@@ -110,8 +110,8 @@ typedef struct{
 //함수 원형
 void trapf(TRAP *trap, Player *player, char (*map)[WIDTH]);			//트랩 펑션 함정을 손쉽게 정의할 수 있는 함수다.
 																	//간단하게 블럭을 상하좌우로 움직일때 사용하면 좋다.	
-void tuto(Player *player, int *save, char (*map)[WIDTH], TRAP trap[],int * stage, MapBox (*mapbox)[WIDTH]);	//튜토리얼함수다
-void tuto2(Player *player, int *save, char (*map)[WIDTH], TRAP trap[], int * stage, MapBox (*mapbox)[WIDTH]);
+void tuto(Player *player, int *save, char (*map)[WIDTH], TRAP trap[],int * stage, MapBox (*mapbox)[WIDTH], Bullet *player_bullet, int *player_bullet_count, int *enemy_count);	//튜토리얼함수다
+void tuto2(Player *player, int *save, char (*map)[WIDTH], TRAP trap[],int * stage, MapBox (*mapbox)[WIDTH], Bullet *player_bullet, int *player_bullet_count, int *enemy_count);
 
 void player_bullet_crash(Bullet *player_bullet, MapBox (*mapbox)[WIDTH], Enemy *enemy, int *enemy_count, int *player_bullet_count); //총알 충돌함수
 BOOL recognizer(Box a,Player player);								//인식범위를 결정하는 함수 인식범위 내에 들어오면 TRUE를 반환한다
@@ -121,10 +121,11 @@ BOOL LR_Crash(char (*map)[WIDTH], Player *player, MapBox (*mapbox)[WIDTH], int k
 void FC_Crash(Player *player, char (*map)[WIDTH], int *save, MapBox (*mapbox)[WIDTH]); //상하 충돌 함수
 BOOL limit(char (*map)[WIDTH],Player player[], int key);
 void trapf(TRAP *trap, Player *player, char (*map)[WIDTH], MapBox (*mapbox)[WIDTH], int save[]);
-void clear(int a,int b, int c, int d, Player * player,int * stage, int stagename);	//좌위우아래 순으로 초기화
+void clear(int a,int b, int c, int d, Player * player,int * stage, int stagename, Bullet *player_bullet, int *player_bullet_count, int *enemy_count);	//좌위우아래 순으로 초기화
 void FC_insert(MapBox (*mapbox)[WIDTH]);
 BOOL trap_reco(TRAP trap,Player player[], int save[]);
 void moveLimit(TRAP trap,Player player[], int save[]);
 void DrawBlockTuto(HDC hdc,HDC backDC,HDC mapDC, TRAP trap[], int stage, HINSTANCE hInst);
 void tuto2Set(Player player[], TRAP trap[], char (*map)[WIDTH], MapBox (*mapbox)[WIDTH]);
 void bossRaid(Player player[], char (*map)[WIDTH], MapBox (*mapbox)[WIDTH],TRAP trap[]);
+void Draw_Bullet(HDC hdc, HDC backDC, Bullet *bullet, int *bullet_count, HINSTANCE hInst);
