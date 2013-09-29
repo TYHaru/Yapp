@@ -343,12 +343,12 @@ void FC_insert(MapBox (*mapbox)[WIDTH]){
 	for(int i=0;i<HEIGHT; i++){
 		for(int j=0; j<WIDTH; j++)
 		{
-			if((i>0) && (j>0) && (mapbox[i][j].value == '#') && (mapbox[i-1][j].value != '#')){
+			if((i>0) && (j>0) && (mapbox[i][j].value == '#' || mapbox[i][j].value == 'S') && (mapbox[i-1][j].value != '#' || mapbox[i][j].value == 'S')){
 				mapbox[i][j].floor_check = 1; //바닥 체크 
 			}
 			else
 				mapbox[i][j].floor_check = 0;
-			if((i>0) && (j>0) && (mapbox[i][j].value == '#') && (mapbox[i+1][j].value != '#')){
+			if((i>0) && (j>0) && (mapbox[i][j].value == '#' || mapbox[i][j].value == 'S') && (mapbox[i+1][j].value != '#'||mapbox[i+1][j].value != 'S')){
 				mapbox[i][j].ceiling_check = 1; //천장 체크
 			}
 			else

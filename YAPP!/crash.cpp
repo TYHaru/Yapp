@@ -83,7 +83,7 @@ BOOL LR_Crash(char (*map)[WIDTH], Player *player, MapBox (*mapbox)[WIDTH], int k
 	}
 	for(i=0; i<HEIGHT; i++){
 		for(j=0; j<WIDTH; j++){
-			if(mapbox[i][j].value == '#'){
+			if(mapbox[i][j].value == '#' || mapbox[i][j].value == 'S'){
 				if(save_player[0] - mapbox[i][j].right < 0){
 					if(save_player[1] - mapbox[i][j].left > 0){
 						if(player[0].top - mapbox[i][j].bottom < 0){
@@ -130,74 +130,6 @@ void FC_Crash(Player *player, char (*map)[WIDTH], int *save, MapBox (*mapbox)[WI
 		}
 	}
 }
-
-/*BOOL limit(char (*map)[WIDTH],Player player[], int key)  //ÁÂ¿ì ¿òÁ÷ÀÓ ºÀ¼â
-{
-	int xLeft, xRight, yTop, yBottom;
-	xLeft = (*player).left/BOXSIZE;
-	xRight = (*player).right/BOXSIZE;
-	yTop = (*player).top/BOXSIZE;
-	yBottom = (*player).bottom/BOXSIZE;
-	if((*player).bottom%30==0)
-	{
-	//	yBottom-=1;
-	}
-	switch(key)
-	{
-	case LEFT:
-		if(yTop==yBottom)
-		{
-			if(map[yTop][xLeft-1]=='#')
-			{
-				if(map[yTop][xLeft]==' '&&(((*player).left-3)/30)==xLeft)
-				{
-					return TRUE;
-				}
-				return FALSE;
-			}
-		}
-		else if(yTop!=yBottom)
-		{
-			if(map[yTop][xLeft-1]=='#'||map[yTop-1][xLeft-1]=='#')
-			{
-				if(map[yTop][xLeft]==' '&&(((*player).left-3)/30)==xLeft)
-				{
-					return TRUE;
-				}
-				return FALSE;
-			}
-		}
-		break;
-	case RIGHT:
-		if(yTop==yBottom)
-		{
-			if(map[yTop][xRight+1]=='#')
-			{
-				if(map[yTop][xRight]==' '&&(((*player).right+3)/30)==xRight)
-				{
-					return TRUE;
-				}
-				return FALSE;
-			}
-		}
-		else if(yTop!=yBottom)
-		{
-			if(map[yTop][xRight+1]=='#'||map[yTop-1][xRight+1]=='#')
-			{
-				if(map[yTop][xRight]==' '&&(((*player).right+3)/30)==xRight)
-				{
-					return TRUE;
-				}
-				return FALSE;
-			}
-		}
-		break;
-	default:
-		return TRUE;
-	}
-	return TRUE;
-}*/
-
 void player_bullet_crash(Bullet *player_bullet, MapBox (*mapbox)[WIDTH], Enemy *enemy, int *enemy_count, int *player_bullet_count){
 	int i, j, k;
 	int enemy_check[ENEMY_MAX]= {0}, bullet_check[P_BULLET_MAX] = {0};
@@ -260,4 +192,21 @@ void player_bullet_crash(Bullet *player_bullet, MapBox (*mapbox)[WIDTH], Enemy *
 			}
 		}
 	}
+}
+void savePoint(int a,int b, int c, int d,Player player[],int *stage,int reset)
+{
+	static Player savepoint;
+	static int savestage;
+	Box reco={a*BOXSIZE-PLAYERSIZE,b*BOXSIZE-PLAYERSIZE,c*BOXSIZE+PLAYERSIZE,d*BOXSIZE+PLAYERSIZE};
+	if(recognizer(reco,player[0]) && player[0].life==1)
+	{
+		savepoint=player[0];
+		savestage=stage[0];
+	}
+	if(reset==RESET)
+	{
+		player[0]=player[1]=savepoint;
+		stage[0]=savestage;
+	}
+
 }

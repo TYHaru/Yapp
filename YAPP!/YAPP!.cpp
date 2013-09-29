@@ -125,11 +125,11 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
 	static int ac=0,j_flag=0,j_not=0;
 	static float j_count1=0;
-	static Player player[2] = {{130,400,130+PLAYERSIZE,400+PLAYERSIZE,1} , {130,400,130+PLAYERSIZE,400+PLAYERSIZE,1}}; //player[0]는 현재위치 player[1]은 전위치
+	static Player player[2] = {{130,130,130+PLAYERSIZE,130+PLAYERSIZE,1} , {130,130,130+PLAYERSIZE,130+PLAYERSIZE,1}}; //player[0]는 현재위치 player[1]은 전위치
 	PAINTSTRUCT ps;
 	static HANDLE hTimer;
 	static char map[HEIGHT][WIDTH]={};
-	static int stage=STAGE1_1, trapKey[10];
+	static int stage=TUTORIAL2, trapKey[10];
 	static TRAP trap[10];
 	static MapBox mapbox[HEIGHT][WIDTH] = {0};
 	int save[3] = {0};	 //save[0] = ac, save[1] = j_count1, save[2] = j_not
@@ -142,6 +142,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	static Bullet player_bullet[P_BULLET_MAX];
 	static int player_bullet_count[1] = {0};
 	static int enemy_count[1] = {0};
+	static int reset=0;
 	
 	SetTimer(hWnd, MOVE_TIMER_ID, 10, NULL);
 	SetTimer(hWnd, BULLET_TIMER_ID, 200, NULL); //총알 타이머
@@ -153,13 +154,13 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	switch(stage)
 	{
 		case TUTORIAL1:
-			tuto(player, save, map,trap,&stage, mapbox);
+			tuto(player, save, map,trap,&stage, mapbox,&reset);
 			break;
 		case TUTORIAL2:
-			tuto2(player,save,map,trap, &stage, mapbox);
+			tuto2(player,save,map,trap, &stage, mapbox, &reset);
 			break;
 		case STAGE1_1:
-			stage1(player,save,map,trap, &stage, mapbox);
+			stage1(player,save,map,trap, &stage, mapbox, &reset);
 			break;
 	}
 
@@ -180,6 +181,10 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		case WM_KEYDOWN:
 			switch(wParam)
 			{
+				case 'R':
+				case 'r':
+					reset=RESET;
+					return false;
 				case 'z': //위누르면 점프 2단까지 허용
 				case 'Z':
 					if(player[0].life==1 && j_count1<2 && j_not<1.1)
