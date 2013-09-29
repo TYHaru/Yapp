@@ -4,7 +4,7 @@
 #include "gamedef.h"
 
 
-void tuto(Player *player, int *save, char (*map)[WIDTH], TRAP trap[],int * stage, MapBox (*mapbox)[WIDTH])
+void tuto(Player *player, int *save, char (*map)[WIDTH], TRAP trap[],int * stage, MapBox (*mapbox)[WIDTH], int * reset)
 {
 	static int first=0;
 	static char c_map[HEIGHT][WIDTH]={
@@ -22,42 +22,57 @@ void tuto(Player *player, int *save, char (*map)[WIDTH], TRAP trap[],int * stage
 	{' ','#','#',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ','#','#','#',' ',' ',' ','#','#',' '},//11
 	{' ','#','#',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ','#','#',' '},//12
 	{' ','#','#',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ','#','#','#',' ',' ',' ',' ',' ',' ',' ','#','#',' '},//13
-	{' ','#','#',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ','#','#',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ','#','#',' '},//14
-	{' ','#','#',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ','#','#',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ','#','#',' '},//15
-	{' ','#','#',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ','#','#',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ','#','#',' '},//16
-	{' ','#','#',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ','#','#',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ','#','#',' '},//17	
+	{' ','#','#',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ','#','#',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ','#','#','#'},//14
+	{' ','#','#',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ','#','#',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ','#'},//15
+	{' ','#','#',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ','#','#',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ','#'},//16
+	{' ','#','#',' ','s',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ','#','#',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ','#','#','#'},//17	
 	{' ','#','#','#','#','#','#','#','#',' ',' ','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#',' '},//18
 	{' ','#','#','#','#','#','#','#','#',' ',' ','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#',' '},//19
 	{' ','#','#','#','#','#','#','#','#',' ',' ','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#',' '},//20
 	{' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' '}//21
 	// 0  1   2   3   4   5   6   7   8   9   10  11  12  13  14  15  16  17  18  19  20  21  22  23  24  25  26  27  28  29  30  31
 	};
+	static char save_map[HEIGHT][WIDTH];
 	clear(930,210,960,270,player,stage,TUTORIAL2);
+	savePoint(4,17,5,18,player,stage,reset[0]);
 	if(first==0)
+		insert_map2(save_map,c_map);
+	if(first==0 || reset[0]==RESET)
 	{	
-		Box a[2]={{13*BOXSIZE,16*BOXSIZE,16*BOXSIZE,17*BOXSIZE},
-			{13*BOXSIZE,15*BOXSIZE,16*BOXSIZE,16*BOXSIZE}};
-		TRAP inst[2]={{a[0],1,1,0,16,16,2,0,3,LRTYPE,DIE},
-		{a[1],1,1,0,15,16,2,0,1,LRTYPE,MOVE_LIMIT}}; //{인식범위, 사라지는 상자 가로,세로, 카운트(기본 0),x좌표, 시작하는좌표,끝나는좌표,가속도,속도}
+		insert_map2(c_map,save_map);
+		Box a[3]={{13*BOXSIZE,16*BOXSIZE,16*BOXSIZE,17*BOXSIZE},
+			{13*BOXSIZE,15*BOXSIZE,16*BOXSIZE,16*BOXSIZE},
+			{30*BOXSIZE,15*BOXSIZE,31*BOXSIZE,17*BOXSIZE}
+		};
+		TRAP inst[3]={{a[0],1,1,0,16,16,2,0,3,LRTYPE,DIE},
+		{a[1],1,1,0,15,16,2,0,1,LRTYPE,MOVE_LIMIT},
+		{a[2],2,1,0,29,14,17,0,1,UDTYPE,DIE}}; //{인식범위, 사라지는 상자 가로,세로, 카운트(기본 0),x좌표, 시작하는좌표,끝나는좌표,가속도,속도}
 		
 		trap[0]=inst[0];
 		trap[1]=inst[1];
-		insert_map(map, c_map, mapbox);
+		trap[2]=inst[2];
 		first++;
+		reset[0]=0;
 	}
-
+	insert_map2(map, c_map);
+	insert_map1(map, mapbox);
   // TODO: 여기에 그리기 코드를 추가합니다.
 	trapf(&trap[0],player,map,mapbox,save);
 	trapf(&trap[1],player,map,mapbox,save);
+	trapf(&trap[2],player,map,mapbox,save);
 	FC_Crash(player, map, save, mapbox);
+	insert_map2(c_map, map);
 	//mapCheck2(player, map, save);
 }
-void DrawBlockTuto(HDC hdc,HDC backDC,HDC mapDC, TRAP trap[], int stage, HINSTANCE hInst)
+void DrawBlockTuto(HDC hdc,HDC backDC,HDC mapDC, TRAP trap[], int stage, HINSTANCE hInst, char (*map)[WIDTH])
 {
+	HDC saveDC = CreateCompatibleDC(hdc);
+	HBITMAP savebit = LoadBitmap(hInst,MAKEINTRESOURCE(IDB_BITMAP11));
+	SelectObject(saveDC,savebit);
 	switch(stage)
 			{
 				case TUTORIAL1:
-					for(int k=0;k<2;k++)
+					for(int k=0;k<3;k++)
 					{
 						if(trap[k].count==1)
 						{
@@ -73,12 +88,15 @@ void DrawBlockTuto(HDC hdc,HDC backDC,HDC mapDC, TRAP trap[], int stage, HINSTAN
 					HDC ButtonDC = CreateCompatibleDC(hdc);
 					HDC kupaDC = CreateCompatibleDC(hdc);
 					HDC fireDC = CreateCompatibleDC(hdc);
+
 					HBITMAP buttonbit = LoadBitmap(hInst,MAKEINTRESOURCE(IDB_BITMAP4));
 					HBITMAP kupabit = LoadBitmap(hInst,MAKEINTRESOURCE(IDB_BITMAP5));
 					HBITMAP firebit = LoadBitmap(hInst,MAKEINTRESOURCE(IDB_BITMAP6));
+					
 					SelectObject(ButtonDC,buttonbit);
 					SelectObject(kupaDC,kupabit);
 					SelectObject(fireDC,firebit);
+
 					for(int k=0;k<4;k++)
 					{
 						if(trap[k].count==1)
@@ -102,8 +120,20 @@ void DrawBlockTuto(HDC hdc,HDC backDC,HDC mapDC, TRAP trap[], int stage, HINSTAN
 
 					break;
 			}
+			for(int i=0;i<HEIGHT-1;i++){
+				for(int j=0;j<WIDTH-1;j++)
+				{
+					if(map[i][j]=='#'){
+						BitBlt(backDC, (j-1)*BOXSIZE, (i-1)*BOXSIZE, BOXSIZE, BOXSIZE, mapDC, 0, 0, SRCCOPY);
+					}
+					else if (map[i][j] =='s')
+					{
+						BitBlt(backDC, (j-1)*BOXSIZE, (i-1)*BOXSIZE, BOXSIZE, BOXSIZE, saveDC, 0, 0, SRCCOPY);
+					}
+				}
+			}
 }
-void tuto2(Player *player, int *save, char (*map)[WIDTH], TRAP trap[], int * stage, MapBox (*mapbox)[WIDTH])
+void tuto2(Player *player, int *save, char (*map)[WIDTH], TRAP trap[], int * stage, MapBox (*mapbox)[WIDTH],int *reset)
 {
 	static int first=0;
 	static char c_map[HEIGHT][WIDTH]={
@@ -114,7 +144,7 @@ void tuto2(Player *player, int *save, char (*map)[WIDTH], TRAP trap[], int * sta
 		{' ','#','#',' ',' ',' ',' ',' ','#','#',' ',' ',' ',' ',' ',' ','#','#',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ','#','#',' '},//4
 		{' ','#','#',' ',' ',' ',' ',' ','#','#',' ',' ',' ',' ',' ',' ','#','#',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ','#','#',' '},//5
 		{' ','#','#',' ',' ',' ',' ',' ','#','#',' ',' ',' ',' ',' ',' ','#','#',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ','#','#',' '},//6
-		{' ',' ',' ',' ',' ',' ',' ',' ','#','#',' ',' ','#','#',' ',' ','#','#',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ','#','#',' '},//7
+		{' ',' ','s',' ',' ',' ',' ',' ','#','#',' ',' ','#','#',' ',' ','#','#',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ','#','#',' '},//7
 		{' ',' ',' ',' ',' ','#','#',' ','#','#',' ',' ','#','#',' ',' ','#','#',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ','#','#',' '},//8
 		{'#','#','#','#','#','#','#',' ','#','#',' ',' ','#','#',' ',' ','#','#',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ','#','#',' '},//9
 		{' ','#','#',' ',' ',' ',' ',' ','#','#',' ',' ','#','#',' ',' ','#','#',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ','#','#',' '},//10
@@ -131,9 +161,15 @@ void tuto2(Player *player, int *save, char (*map)[WIDTH], TRAP trap[], int * sta
 		{' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' '}//21
 		//0   1   2   3   4   5   6   7   8   9   10  11  12  13  14  15  16  17  18  19  20  21  22  23  24  25  26  27  28  29  30 31  32
 	};
+	static char save_map[HEIGHT][WIDTH];
 	clear(0,210,30,270,player,stage,TUTORIAL1);
+	clear(25*BOXSIZE,21*BOXSIZE,27*BOXSIZE,22*BOXSIZE,player,stage,STAGE1_1);
+	savePoint(2,7,3,8,player,stage,reset[0]);
 	if(first==0)
+		insert_map2(save_map,c_map);
+	if(first==0 || reset[0]==RESET)
 	{
+		insert_map2(c_map, save_map);
 		Box a[4]={{5*BOXSIZE,6*BOXSIZE,7*BOXSIZE,8*BOXSIZE},
 		{3*BOXSIZE,15*BOXSIZE,6*BOXSIZE,16*BOXSIZE},
 		{11*BOXSIZE,17*BOXSIZE,12*BOXSIZE,18*BOXSIZE},
@@ -148,12 +184,15 @@ void tuto2(Player *player, int *save, char (*map)[WIDTH], TRAP trap[], int * sta
 		for(int i=0;i<4;i++)
 			trap[i]=inst[i];
 		first++;
-		insert_map(map, c_map, mapbox);
+		reset[0]=0;
 	}
+	insert_map2(map, c_map);
+	insert_map1(map, mapbox);
 	for(int i=0;i<4;i++)
 		trapf(&trap[i],player,map,mapbox,save);
 	tuto2Set(player,trap,map,mapbox);
 	FC_Crash(player, map, save, mapbox); 
+	insert_map2(c_map, map);
 }
 void tuto2Set(Player player[], TRAP trap[], char (*map)[WIDTH], MapBox (*mapbox)[WIDTH])
 {

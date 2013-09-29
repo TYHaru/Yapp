@@ -125,7 +125,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
 	static int ac=0,j_flag=0,j_not=0;
 	static float j_count1=0;
-	static Player player[2] = {{130,400,130+PLAYERSIZE,400+PLAYERSIZE,1} , {130,400,130+PLAYERSIZE,400+PLAYERSIZE,1}}; //player[0]는 현재위치 player[1]은 전위치
+	static Player player[2] = {{130,130,130+PLAYERSIZE,130+PLAYERSIZE,1} , {130,130,130+PLAYERSIZE,130+PLAYERSIZE,1}}; //player[0]는 현재위치 player[1]은 전위치
 	PAINTSTRUCT ps;
 	static HANDLE hTimer;
 	static char map[HEIGHT][WIDTH]={};
@@ -142,6 +142,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	static Bullet player_bullet[P_BULLET_MAX];
 	static int player_bullet_count[1] = {0};
 	static int enemy_count[1] = {0};
+	static int reset=0;
 	
 	SetTimer(hWnd, MOVE_TIMER_ID, 10, NULL);
 	SetTimer(hWnd, BULLET_TIMER_ID, 200, NULL); //총알 타이머
@@ -153,10 +154,13 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	switch(stage)
 	{
 		case TUTORIAL1:
-			tuto(player, save, map,trap,&stage, mapbox);
+			tuto(player, save, map,trap,&stage, mapbox,&reset);
 			break;
 		case TUTORIAL2:
-			tuto2(player,save,map,trap, &stage, mapbox);
+			tuto2(player,save,map,trap, &stage, mapbox, &reset);
+			break;
+		case STAGE1_1:
+			stage1(player,save,map,trap, &stage, mapbox, &reset);
 			break;
 	}
 
@@ -177,6 +181,10 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		case WM_KEYDOWN:
 			switch(wParam)
 			{
+				case 'R':
+				case 'r':
+					reset=RESET;
+					return false;
 				case 'z': //위누르면 점프 2단까지 허용
 				case 'Z':
 					if(player[0].life==1 && j_count1<2 && j_not<1.1)
@@ -283,7 +291,10 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 				mapbit=LoadBitmap(hInst,MAKEINTRESOURCE(IDB_BITMAP1));
 			else
 				mapbit=LoadBitmap(hInst,MAKEINTRESOURCE(IDB_BITMAP3));
-			hBit = LoadBitmap(hInst, MAKEINTRESOURCE(IDB_BITMAP2));
+			if(stage/10==TUTO)
+				hBit = LoadBitmap(hInst, MAKEINTRESOURCE(IDB_BITMAP2));
+			else if(stage/10==STAGE1)
+				hBit = LoadBitmap(hInst, MAKEINTRESOURCE(IDB_BITMAP7));
 			hOldBit = (HBITMAP)SelectObject(backDC, backbitmap);
 			holdmap = (HBITMAP)SelectObject(mapDC,hBit);
 			holdchar = (HBITMAP)SelectObject(charDC,mapbit);
@@ -292,17 +303,14 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 			switch(stage/10)
 			{
 				case TUTO:
-					DrawBlockTuto(hdc,backDC,mapDC,trap,stage,hInst);
+					DrawBlockTuto(hdc,backDC,mapDC,trap,stage,hInst,map);
+					break;
+				case STAGE1:
+					DrawBlockStage1(hdc,backDC,mapDC,trap,stage,hInst,map);
+					break;
 			}
-			for(int i=0;i<HEIGHT-1;i++){
-				for(int j=0;j<WIDTH-1;j++)
-				{
-					if(map[i][j]=='#'){
-					BitBlt(backDC, (j-1)*BOXSIZE, (i-1)*BOXSIZE, BOXSIZE, BOXSIZE, mapDC, 0, 0, SRCCOPY);
-				}
-			}
-		}
-		BitBlt(backDC, player[0].left-BOXSIZE, player[0].top-BOXSIZE, PLAYERSIZE, PLAYERSIZE, charDC, 0, 0, SRCCOPY);
+			
+		TransparentBlt(backDC, player[0].left-BOXSIZE, player[0].top-BOXSIZE, PLAYERSIZE, PLAYERSIZE, charDC, 0, 0,PLAYERSIZE,PLAYERSIZE, RGB(255,255,255));
 		BitBlt(hdc,0,0,rt.right,rt.bottom,backDC,0,0,SRCCOPY);
 
 // TODO: 여기에 그리기 코드를 추가합니다.
