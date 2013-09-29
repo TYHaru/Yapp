@@ -129,7 +129,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	PAINTSTRUCT ps;
 	static HANDLE hTimer;
 	static char map[HEIGHT][WIDTH]={};
-	static int stage=TUTORIAL2, trapKey[10];
+	static int stage=TUTORIAL1, trapKey[10];
 	static TRAP trap[10];
 	static MapBox mapbox[HEIGHT][WIDTH] = {0};
 	int save[3] = {0};	 //save[0] = ac, save[1] = j_count1, save[2] = j_not
@@ -313,7 +313,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 			}
 			for(int i=0; i<player_bullet_count[0]; i++){
 				//BitBlt(backDC, player_bullet[i].left, player_bullet[i].top, P_BULLETSIZE, P_BULLETSIZE, BulletDC , 0, 0, SRCCOPY);
-				TextOut(hdc, player_bullet[i].left, player_bullet[i].top, B, strlen(B)); 
+				TextOut(backDC, player_bullet[i].left, player_bullet[i].top, B, strlen(B)); 
 			}
 		TransparentBlt(backDC, player[0].left-BOXSIZE, player[0].top-BOXSIZE, PLAYERSIZE, PLAYERSIZE, charDC, 0, 0,PLAYERSIZE,PLAYERSIZE, RGB(255,255,255));
 		BitBlt(hdc,0,0,rt.right,rt.bottom,backDC,0,0,SRCCOPY);
