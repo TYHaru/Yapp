@@ -50,8 +50,18 @@ void DrawBlockStage1(HDC hdc,HDC backDC,HDC mapDC, TRAP trap[], int stage, HINST
 					}
 				}
 			}
-	
+			DeleteObject(lavabit);
+			DeleteObject(firebit);
+			DeleteObject(sandbit);
+			DeleteObject(savebit);
+			DeleteObject(waterbit);
 	}
+		DeleteDC(backgroundDC);
+		DeleteDC(lavaDC);
+		DeleteDC(fireDC);
+		DeleteDC(sandDC);
+		DeleteDC(saveDC);
+		DeleteDC(waterDC);
 }
 void stage1(Player *player, int *save, char (*map)[WIDTH], TRAP trap[], int * stage, MapBox (*mapbox)[WIDTH] , int * reset)
 {

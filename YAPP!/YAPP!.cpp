@@ -136,7 +136,6 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	HDC hdc, hBitDC, mapDC, backDC, charDC, BulletDC;
 	HBITMAP hBit, mapbit, Bulletbit;
 	HBITMAP backbitmap;	 //기존에 dc에 저장된 BitMap을 다른곳에 보관 해주면서 새 BitMap을 dc에 저장한다.
-	HBITMAP hOldBit,holdmap,holdchar, holdBullet; 
 	RECT rt={0,0,900,700};
 	static int player_bullet_direction;
 	static Bullet player_bullet[P_BULLET_MAX];
@@ -297,10 +296,10 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 			else if(stage/10==STAGE1)
 				hBit = LoadBitmap(hInst, MAKEINTRESOURCE(IDB_BITMAP7));
 			Bulletbit = LoadBitmap(hInst, MAKEINTRESOURCE(IDB_BITMAP15));
-			hOldBit = (HBITMAP)SelectObject(backDC, backbitmap);
-			holdmap = (HBITMAP)SelectObject(mapDC,hBit);
-			holdchar = (HBITMAP)SelectObject(charDC,mapbit);
-			holdBullet = (HBITMAP)SelectObject(BulletDC, Bulletbit);
+			SelectObject(backDC, backbitmap);
+			SelectObject(mapDC,hBit);
+			SelectObject(charDC,mapbit);
+			SelectObject(BulletDC, Bulletbit);
 			SelectObject(backDC,hBit);
 			FillRect(backDC, &rt, (HBRUSH)GetStockObject(WHITE_BRUSH));
 			switch(stage/10)
@@ -322,10 +321,16 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 // TODO: 여기에 그리기 코드를 추가합니다.
 // SelectObject(hBitDC, hOldBit); 
 // SelectObject(mapDC, holdmap); 
+		DeleteObject(backbitmap);
 		DeleteObject(hBit);
+		DeleteObject(Bulletbit);
 		DeleteObject(mapbit);
+		DeleteDC(hBitDC);
 		DeleteDC(backDC);
+		DeleteDC(BulletDC);
+		DeleteDC(hdc);
 		DeleteDC(mapDC);
+		DeleteDC(charDC);
 		
 		EndPaint(hWnd, &ps);
 		return FALSE;

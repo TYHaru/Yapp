@@ -118,6 +118,13 @@ void DrawBlockTuto(HDC hdc,HDC backDC,HDC mapDC, TRAP trap[], int stage, HINSTAN
 						BitBlt(backDC,trap[5].present.left,trap[5].present.top,210,290,kupaDC,0,0,SRCCOPY);
 					}
 
+					DeleteObject(buttonbit);
+					DeleteObject(firebit);
+					DeleteObject(kupabit);
+
+					DeleteDC(ButtonDC);
+					DeleteDC(fireDC);
+					DeleteDC(kupaDC);
 					break;
 			}
 			for(int i=0;i<HEIGHT-1;i++){
@@ -132,6 +139,8 @@ void DrawBlockTuto(HDC hdc,HDC backDC,HDC mapDC, TRAP trap[], int stage, HINSTAN
 					}
 				}
 			}
+			DeleteObject(savebit);
+			DeleteDC(saveDC);
 }
 void tuto2(Player *player, int *save, char (*map)[WIDTH], TRAP trap[], int * stage, MapBox (*mapbox)[WIDTH],int *reset)
 {
@@ -163,7 +172,7 @@ void tuto2(Player *player, int *save, char (*map)[WIDTH], TRAP trap[], int * sta
 	};
 	static char save_map[HEIGHT][WIDTH];
 	clear(0,210,30,270,player,stage,TUTORIAL1);
-	clear(25*BOXSIZE,21*BOXSIZE,27*BOXSIZE,22*BOXSIZE,player,stage,STAGE1_1);
+	clear(21*BOXSIZE,21*BOXSIZE,29*BOXSIZE,22*BOXSIZE,player,stage,STAGE1_1);
 	savePoint(2,7,3,8,player,stage,reset[0]);
 	if(first==0)
 		insert_map2(save_map,c_map);
@@ -271,7 +280,7 @@ void bossRaid(Player player[], char (*map)[WIDTH], MapBox (*mapbox)[WIDTH],TRAP 
 	
 	if(trap[5].count==BOSSRAID|| trap[5].count== BOSSFIRE)
 	{
-		Box button={5*BOXSIZE,18*BOXSIZE,6*BOXSIZE,19*BOXSIZE};
+		Box button={5*BOXSIZE-PLAYERSIZE,18*BOXSIZE-PLAYERSIZE,6*BOXSIZE+PLAYERSIZE,19*BOXSIZE+PLAYERSIZE};
 
 		if(trap[5].present.bottom<17*BOXSIZE){
 			trap[5].present.top+=5;
