@@ -1,4 +1,5 @@
 
+#pragma comment(lib, "msimg32.lib")
 
 #define		PLAYERSIZE			20
 #define		BOXSIZE				30
@@ -18,10 +19,13 @@
 #define		RIGHT				2
 #define		DIE					1
 #define		MOVE_LIMIT			2
+#define		TUTO				0
 #define		TUTORIAL1			01
 #define		TUTORIAL2			02
+#define		STAGE1				1
 #define		STAGE1_1			11
 #define		STAGE1_2			12
+#define		STAGE2				2
 #define		STAGE2_1			21
 #define		STAGE2_2			22
 #define		WIDTH				32
@@ -34,15 +38,21 @@
 #define		SW					6		//남서
 #define		WW					7		//서
 #define		NW					8		//북서
+#define		RESET				100
 
 //trap관련 메크로
 #define		UDTYPE				1		//위에서 아래: 1 /아래에서 위 : 2 /좌에서 우 : 3 / 우에서 좌 : 4
 #define		DUTYPE				2
 #define		LRTYPE				3
 #define		RLTYPE				4
+#define		RE					1		//재사용가능
+#define		NOT					0		//재사용 불가 이건 생략가능
 
-
-
+//BOSS관련 메크로
+#define		BOSSUP				100
+#define		BOSSRAID			101
+#define		BOSSFIRE			102
+#define		BEATBOSS			103
 //구조체
 
 typedef struct {                  //맵체크 구조체
@@ -80,8 +90,7 @@ typedef struct
 	int v;					//그냥속도(없이 가속도만 붙일경우 0		픽셀로 계산
 	char type;				//위에서 아래: UDTYPE /아래에서 위 : DUTYPE /좌에서 우 : LRTYPE / 우에서 좌 : RLTYPE
 	char key;
-	char trapID;
-
+	char recur;				//재사용가능?
 	Box present;			//현재픽셀								픽셀로 계산
 }TRAP;
 typedef struct{
@@ -103,12 +112,13 @@ typedef struct{
 //함수 원형
 void trapf(TRAP *trap, Player *player, char (*map)[WIDTH]);			//트랩 펑션 함정을 손쉽게 정의할 수 있는 함수다.
 																	//간단하게 블럭을 상하좌우로 움직일때 사용하면 좋다.	
-void tuto(Player *player, int *save, char (*map)[WIDTH], TRAP trap[],int * stage, MapBox (*mapbox)[WIDTH]);	//튜토리얼함수다
-void tuto2(Player *player, int *save, char (*map)[WIDTH], TRAP trap[], int * stage, MapBox (*mapbox)[WIDTH]);
+void tuto(Player *player, int *save, char (*map)[WIDTH], TRAP trap[],int * stage, MapBox (*mapbox)[WIDTH], int *reset);	//튜토리얼함수다
+void tuto2(Player *player, int *save, char (*map)[WIDTH], TRAP trap[], int * stage, MapBox (*mapbox)[WIDTH], int * reset);
 
 void player_bullet_crash(Bullet *player_bullet, MapBox (*mapbox)[WIDTH], Enemy *enemy, int *enemy_count, int *player_bullet_count); //총알 충돌함수
 BOOL recognizer(Box a,Player player);								//인식범위를 결정하는 함수 인식범위 내에 들어오면 TRUE를 반환한다
-void insert_map(char (*map)[WIDTH], char (*c_map)[WIDTH], MapBox (*mapbox)[WIDTH]); //맵에 넣어줌
+void insert_map1(char (*map)[WIDTH], MapBox (*mapbox)[WIDTH]); //맵에 넣어줌
+void insert_map2(char (*map)[WIDTH], char (*c_map)[WIDTH]);
 void mapCheck2(Player *player, char (*map)[WIDTH], int *save);
 BOOL LR_Crash(char (*map)[WIDTH], Player *player, MapBox (*mapbox)[WIDTH], int key); //좌우 충돌 함수
 void FC_Crash(Player *player, char (*map)[WIDTH], int *save, MapBox (*mapbox)[WIDTH]); //상하 충돌 함수
@@ -118,3 +128,9 @@ void clear(int a,int b, int c, int d, Player * player,int * stage, int stagename
 void FC_insert(MapBox (*mapbox)[WIDTH]);
 BOOL trap_reco(TRAP trap,Player player[], int save[]);
 void moveLimit(TRAP trap,Player player[], int save[]);
+void DrawBlockTuto(HDC hdc,HDC backDC,HDC mapDC, TRAP trap[], int stage, HINSTANCE hInst, char (*map)[WIDTH]);
+void tuto2Set(Player player[], TRAP trap[], char (*map)[WIDTH], MapBox (*mapbox)[WIDTH]);
+void bossRaid(Player player[], char (*map)[WIDTH], MapBox (*mapbox)[WIDTH],TRAP trap[]);
+void stage1(Player *player, int *save, char (*map)[WIDTH], TRAP trap[], int * stage, MapBox (*mapbox)[WIDTH], int * reset);
+void DrawBlockStage1(HDC hdc,HDC backDC,HDC mapDC, TRAP trap[], int stage, HINSTANCE hInst, char (*map)[WIDTH]);
+void savePoint(int a,int b, int c, int d,Player player[],int* stage,int reset);

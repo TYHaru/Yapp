@@ -50,6 +50,9 @@
     <ClCompile Include="trap.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="stage1.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="YAPP!.rc">
@@ -70,6 +73,42 @@
       <Filter>리소스 파일</Filter>
     </Image>
     <Image Include="피.bmp">
+      <Filter>리소스 파일</Filter>
+    </Image>
+    <Image Include="버튼.bmp">
+      <Filter>리소스 파일</Filter>
+    </Image>
+    <Image Include="튜토보스.bmp">
+      <Filter>리소스 파일</Filter>
+    </Image>
+    <Image Include="드래곤브래스.bmp">
+      <Filter>리소스 파일</Filter>
+    </Image>
+    <Image Include="지하타일.bmp">
+      <Filter>리소스 파일</Filter>
+    </Image>
+    <Image Include="stage1배경.bmp">
+      <Filter>리소스 파일</Filter>
+    </Image>
+    <Image Include="sand.bmp">
+      <Filter>리소스 파일</Filter>
+    </Image>
+    <Image Include="불꽃.bmp">
+      <Filter>리소스 파일</Filter>
+    </Image>
+    <Image Include="세이브.bmp">
+      <Filter>리소스 파일</Filter>
+    </Image>
+    <Image Include="용암.bmp">
+      <Filter>리소스 파일</Filter>
+    </Image>
+    <Image Include="water.bmp">
+      <Filter>리소스 파일</Filter>
+    </Image>
+    <Image Include="Bullet.bmp">
+      <Filter>리소스 파일</Filter>
+    </Image>
+    <Image Include="bitmap14.bmp">
       <Filter>리소스 파일</Filter>
     </Image>
   </ItemGroup>

@@ -3,12 +3,10 @@
 #include "gamedef.h"
 
 #define MAX_LOADSTRING 100
-
 // 전역 변수:
 HINSTANCE hInst;	 // 현재 인스턴스입니다.
 TCHAR szTitle[MAX_LOADSTRING];	 // 제목 표시줄 텍스트입니다.
 TCHAR szWindowClass[MAX_LOADSTRING];	 // 기본 창 클래스 이름입니다.
-
 // 이 코드 모듈에 들어 있는 함수의 정방향 선언입니다.
 ATOM	 MyRegisterClass(HINSTANCE hInstance);
 BOOL	 InitInstance(HINSTANCE, int);
@@ -135,16 +133,16 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	static TRAP trap[10];
 	static MapBox mapbox[HEIGHT][WIDTH] = {0};
 	int save[3] = {0};	 //save[0] = ac, save[1] = j_count1, save[2] = j_not
-	HDC hdc, hBitDC, mapDC, backDC, charDC;
-	HBITMAP hBit, mapbit;
+	HDC hdc, hBitDC, mapDC, backDC, charDC, BulletDC;
+	HBITMAP hBit, mapbit, Bulletbit;
 	HBITMAP backbitmap;	 //기존에 dc에 저장된 BitMap을 다른곳에 보관 해주면서 새 BitMap을 dc에 저장한다.
-	HBITMAP hOldBit,holdmap,holdchar; 
 	RECT rt={0,0,900,700};
 	static int player_bullet_direction;
 	static Bullet player_bullet[P_BULLET_MAX];
 	static int player_bullet_count[1] = {0};
 	static int enemy_count[1] = {0};
-	
+	static int reset=0;
+	char B[7] = "bullet";
 	SetTimer(hWnd, MOVE_TIMER_ID, 10, NULL);
 	SetTimer(hWnd, BULLET_TIMER_ID, 200, NULL); //총알 타이머
 
@@ -155,10 +153,13 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	switch(stage)
 	{
 		case TUTORIAL1:
-			tuto(player, save, map,trap,&stage, mapbox);
+			tuto(player, save, map,trap,&stage, mapbox,&reset);
 			break;
 		case TUTORIAL2:
-			tuto2(player,save,map,trap, &stage, mapbox);
+			tuto2(player,save,map,trap, &stage, mapbox, &reset);
+			break;
+		case STAGE1_1:
+			stage1(player,save,map,trap, &stage, mapbox, &reset);
 			break;
 	}
 
@@ -179,6 +180,10 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		case WM_KEYDOWN:
 			switch(wParam)
 			{
+				case 'R':
+				case 'r':
+					reset=RESET;
+					return false;
 				case 'z': //위누르면 점프 2단까지 허용
 				case 'Z':
 					if(player[0].life==1 && j_count1<2 && j_not<1.1)
@@ -255,7 +260,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 							player_bullet[player_bullet_count[0]].left = player[0].right;
 							player_bullet[player_bullet_count[0]].right = player_bullet[player_bullet_count[0]].left + P_BULLETSIZE;
 						}
-						player_bullet[player_bullet_count[0]].top = player[0].top - 11;
+						player_bullet[player_bullet_count[0]].top = player[0].top + 11;
 						player_bullet[player_bullet_count[0]].bottom = player_bullet[player_bullet_count[0]].top + P_BULLETSIZE;
 						player_bullet_count[0]++;
 					}
@@ -281,39 +286,51 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 			hBitDC = CreateCompatibleDC(hdc);
 			mapDC = CreateCompatibleDC(hdc);
 			charDC = CreateCompatibleDC(hdc);
+			BulletDC = CreateCompatibleDC(hdc);
 			if(player[0].life==1)
 				mapbit=LoadBitmap(hInst,MAKEINTRESOURCE(IDB_BITMAP1));
 			else
 				mapbit=LoadBitmap(hInst,MAKEINTRESOURCE(IDB_BITMAP3));
-			hBit = LoadBitmap(hInst, MAKEINTRESOURCE(IDB_BITMAP2));
-			hOldBit = (HBITMAP)SelectObject(backDC, backbitmap);
-			holdmap = (HBITMAP)SelectObject(mapDC,hBit);
-			holdchar = (HBITMAP)SelectObject(charDC,mapbit);
+			if(stage/10==TUTO)
+				hBit = LoadBitmap(hInst, MAKEINTRESOURCE(IDB_BITMAP2));
+			else if(stage/10==STAGE1)
+				hBit = LoadBitmap(hInst, MAKEINTRESOURCE(IDB_BITMAP7));
+			Bulletbit = LoadBitmap(hInst, MAKEINTRESOURCE(IDB_BITMAP15));
+			SelectObject(backDC, backbitmap);
+			SelectObject(mapDC,hBit);
+			SelectObject(charDC,mapbit);
+			SelectObject(BulletDC, Bulletbit);
 			SelectObject(backDC,hBit);
 			FillRect(backDC, &rt, (HBRUSH)GetStockObject(WHITE_BRUSH));
 			switch(stage/10)
 			{
 				case TUTO:
-					DrawBlockTuto(backDC,mapDC,trap,stage);
+					DrawBlockTuto(hdc,backDC,mapDC,trap,stage,hInst,map);
+					break;
+				case STAGE1:
+					DrawBlockStage1(hdc,backDC,mapDC,trap,stage,hInst,map);
+					break;
 			}
-			for(int i=0;i<HEIGHT-1;i++){
-				for(int j=0;j<WIDTH-1;j++)
-				{
-					if(map[i][j]=='#'){
-					BitBlt(backDC, (j-1)*BOXSIZE, (i-1)*BOXSIZE, BOXSIZE, BOXSIZE, mapDC, 0, 0, SRCCOPY);
-				}
+			for(int i=0; i<player_bullet_count[0]; i++){
+				//BitBlt(backDC, player_bullet[i].left, player_bullet[i].top, P_BULLETSIZE, P_BULLETSIZE, BulletDC , 0, 0, SRCCOPY);
+				TextOut(backDC, player_bullet[i].left, player_bullet[i].top, B, strlen(B)); 
 			}
-		}
-		BitBlt(backDC, player[0].left-BOXSIZE, player[0].top-BOXSIZE, PLAYERSIZE, PLAYERSIZE, charDC, 0, 0, SRCCOPY);
+		TransparentBlt(backDC, player[0].left-BOXSIZE, player[0].top-BOXSIZE, PLAYERSIZE, PLAYERSIZE, charDC, 0, 0,PLAYERSIZE,PLAYERSIZE, RGB(255,255,255));
 		BitBlt(hdc,0,0,rt.right,rt.bottom,backDC,0,0,SRCCOPY);
 
 // TODO: 여기에 그리기 코드를 추가합니다.
 // SelectObject(hBitDC, hOldBit); 
 // SelectObject(mapDC, holdmap); 
+		DeleteObject(backbitmap);
 		DeleteObject(hBit);
+		DeleteObject(Bulletbit);
 		DeleteObject(mapbit);
+		DeleteDC(hBitDC);
 		DeleteDC(backDC);
+		DeleteDC(BulletDC);
+		DeleteDC(hdc);
 		DeleteDC(mapDC);
+		DeleteDC(charDC);
 		
 		EndPaint(hWnd, &ps);
 		return FALSE;
