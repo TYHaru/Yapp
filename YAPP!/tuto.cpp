@@ -42,17 +42,18 @@ void tuto(Player *player, int *save, char (*map)[WIDTH], TRAP trap[],int * stage
 		
 		trap[0]=inst[0];
 		trap[1]=inst[1];
-		insert_map(map, c_map, mapbox);
 		first++;
 	}
-
+	insert_map2(map, c_map);
+	insert_map1(map, mapbox);
   // TODO: 여기에 그리기 코드를 추가합니다.
 	trapf(&trap[0],player,map,mapbox,save);
 	trapf(&trap[1],player,map,mapbox,save);
 	FC_Crash(player, map, save, mapbox);
+	insert_map2(c_map, map);
 	//mapCheck2(player, map, save);
 }
-void DrawBlockTuto(HDC hdc,HDC backDC,HDC mapDC, TRAP trap[], int stage, HINSTANCE hInst)
+void DrawBlockTuto(HDC hdc,HDC backDC,HDC mapDC, TRAP trap[], int stage, HINSTANCE hInst, char (*map)[WIDTH])
 {
 	switch(stage)
 			{
@@ -102,6 +103,14 @@ void DrawBlockTuto(HDC hdc,HDC backDC,HDC mapDC, TRAP trap[], int stage, HINSTAN
 
 					break;
 			}
+			for(int i=0;i<HEIGHT-1;i++){
+				for(int j=0;j<WIDTH-1;j++)
+				{
+					if(map[i][j]=='#'){
+					BitBlt(backDC, (j-1)*BOXSIZE, (i-1)*BOXSIZE, BOXSIZE, BOXSIZE, mapDC, 0, 0, SRCCOPY);
+					}
+				}
+			}
 }
 void tuto2(Player *player, int *save, char (*map)[WIDTH], TRAP trap[], int * stage, MapBox (*mapbox)[WIDTH])
 {
@@ -132,6 +141,7 @@ void tuto2(Player *player, int *save, char (*map)[WIDTH], TRAP trap[], int * sta
 		//0   1   2   3   4   5   6   7   8   9   10  11  12  13  14  15  16  17  18  19  20  21  22  23  24  25  26  27  28  29  30 31  32
 	};
 	clear(0,210,30,270,player,stage,TUTORIAL1);
+	clear(25*BOXSIZE,21*BOXSIZE,27*BOXSIZE,22*BOXSIZE,player,stage,STAGE1_1);
 	if(first==0)
 	{
 		Box a[4]={{5*BOXSIZE,6*BOXSIZE,7*BOXSIZE,8*BOXSIZE},
@@ -148,12 +158,14 @@ void tuto2(Player *player, int *save, char (*map)[WIDTH], TRAP trap[], int * sta
 		for(int i=0;i<4;i++)
 			trap[i]=inst[i];
 		first++;
-		insert_map(map, c_map, mapbox);
 	}
+	insert_map2(map, c_map);
+	insert_map1(map, mapbox);
 	for(int i=0;i<4;i++)
 		trapf(&trap[i],player,map,mapbox,save);
 	tuto2Set(player,trap,map,mapbox);
 	FC_Crash(player, map, save, mapbox); 
+	insert_map2(c_map, map);
 }
 void tuto2Set(Player player[], TRAP trap[], char (*map)[WIDTH], MapBox (*mapbox)[WIDTH])
 {

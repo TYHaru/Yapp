@@ -87,6 +87,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="crash.cpp" />
+    <ClCompile Include="stage1.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
@@ -99,10 +100,17 @@
     <ResourceCompile Include="YAPP!.rc" />
   </ItemGroup>
   <ItemGroup>
+    <Image Include="sand.bmp" />
     <Image Include="small.ico" />
+    <Image Include="stage1배경.bmp" />
+    <Image Include="water.bmp" />
     <Image Include="YAPP!.ico" />
     <Image Include="드래곤브래스.bmp" />
     <Image Include="버튼.bmp" />
+    <Image Include="불꽃.bmp" />
+    <Image Include="세이브.bmp" />
+    <Image Include="용암.bmp" />
+    <Image Include="지하타일.bmp" />
     <Image Include="케릭터.bmp" />
     <Image Include="타일1.bmp" />
     <Image Include="튜토보스.bmp" />

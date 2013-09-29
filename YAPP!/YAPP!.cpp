@@ -129,7 +129,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	PAINTSTRUCT ps;
 	static HANDLE hTimer;
 	static char map[HEIGHT][WIDTH]={};
-	static int stage=TUTORIAL2, trapKey[10];
+	static int stage=STAGE1_1, trapKey[10];
 	static TRAP trap[10];
 	static MapBox mapbox[HEIGHT][WIDTH] = {0};
 	int save[3] = {0};	 //save[0] = ac, save[1] = j_count1, save[2] = j_not
@@ -157,6 +157,9 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 			break;
 		case TUTORIAL2:
 			tuto2(player,save,map,trap, &stage, mapbox);
+			break;
+		case STAGE1_1:
+			stage1(player,save,map,trap, &stage, mapbox);
 			break;
 	}
 
@@ -283,7 +286,10 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 				mapbit=LoadBitmap(hInst,MAKEINTRESOURCE(IDB_BITMAP1));
 			else
 				mapbit=LoadBitmap(hInst,MAKEINTRESOURCE(IDB_BITMAP3));
-			hBit = LoadBitmap(hInst, MAKEINTRESOURCE(IDB_BITMAP2));
+			if(stage/10==TUTO)
+				hBit = LoadBitmap(hInst, MAKEINTRESOURCE(IDB_BITMAP2));
+			else if(stage/10==STAGE1)
+				hBit = LoadBitmap(hInst, MAKEINTRESOURCE(IDB_BITMAP7));
 			hOldBit = (HBITMAP)SelectObject(backDC, backbitmap);
 			holdmap = (HBITMAP)SelectObject(mapDC,hBit);
 			holdchar = (HBITMAP)SelectObject(charDC,mapbit);
@@ -292,17 +298,14 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 			switch(stage/10)
 			{
 				case TUTO:
-					DrawBlockTuto(hdc,backDC,mapDC,trap,stage,hInst);
+					DrawBlockTuto(hdc,backDC,mapDC,trap,stage,hInst,map);
+					break;
+				case STAGE1:
+					DrawBlockStage1(hdc,backDC,mapDC,trap,stage,hInst,map);
+					break;
 			}
-			for(int i=0;i<HEIGHT-1;i++){
-				for(int j=0;j<WIDTH-1;j++)
-				{
-					if(map[i][j]=='#'){
-					BitBlt(backDC, (j-1)*BOXSIZE, (i-1)*BOXSIZE, BOXSIZE, BOXSIZE, mapDC, 0, 0, SRCCOPY);
-				}
-			}
-		}
-		BitBlt(backDC, player[0].left-BOXSIZE, player[0].top-BOXSIZE, PLAYERSIZE, PLAYERSIZE, charDC, 0, 0, SRCCOPY);
+			
+		TransparentBlt(backDC, player[0].left-BOXSIZE, player[0].top-BOXSIZE, PLAYERSIZE, PLAYERSIZE, charDC, 0, 0,PLAYERSIZE,PLAYERSIZE, RGB(255,255,255));
 		BitBlt(hdc,0,0,rt.right,rt.bottom,backDC,0,0,SRCCOPY);
 
 // TODO: 여기에 그리기 코드를 추가합니다.

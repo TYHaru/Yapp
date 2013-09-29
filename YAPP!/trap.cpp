@@ -315,11 +315,10 @@ void moveLimit(TRAP trap,Player player[], int save[])
 		break;
 	}
 }
-void insert_map(char (*map)[WIDTH], char (*c_map)[WIDTH], MapBox (*mapbox)[WIDTH]){
+void insert_map1(char (*map)[WIDTH], MapBox (*mapbox)[WIDTH]){
 	for(int i=0;i<HEIGHT; i++){
 		for(int j=0; j<WIDTH; j++)
 		{
-			map[i][j]=c_map[i][j];
 			mapbox[i][j].value = map[i][j];
 			mapbox[i][j].left = j*30;
 			mapbox[i][j].right = mapbox[i][j].left + 30;
@@ -330,17 +329,26 @@ void insert_map(char (*map)[WIDTH], char (*c_map)[WIDTH], MapBox (*mapbox)[WIDTH
 		}
 	}
 }
+void insert_map2(char (*map)[WIDTH], char (*c_map)[WIDTH]){
+	for(int i=0;i<HEIGHT; i++){
+		for(int j=0; j<WIDTH; j++)
+		{
+			map[i][j]=c_map[i][j];
+		}
+	}
+}
+
 void FC_insert(MapBox (*mapbox)[WIDTH]){
 	int i, j;
 	for(int i=0;i<HEIGHT; i++){
 		for(int j=0; j<WIDTH; j++)
 		{
-			if((i>0) && (j>0) && (mapbox[i][j].value == '#') && (mapbox[i-1][j].value == ' ')){
+			if((i>0) && (j>0) && (mapbox[i][j].value == '#') && (mapbox[i-1][j].value != '#')){
 				mapbox[i][j].floor_check = 1; //바닥 체크 
 			}
 			else
 				mapbox[i][j].floor_check = 0;
-			if((i>0) && (j>0) && (mapbox[i][j].value == '#') && (mapbox[i+1][j].value == ' ')){
+			if((i>0) && (j>0) && (mapbox[i][j].value == '#') && (mapbox[i+1][j].value != '#')){
 				mapbox[i][j].ceiling_check = 1; //천장 체크
 			}
 			else
