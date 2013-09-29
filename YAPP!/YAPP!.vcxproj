@@ -100,12 +100,7 @@
     <ResourceCompile Include="YAPP!.rc" />
   </ItemGroup>
   <ItemGroup>
-<<<<<<< HEAD
-    <Image Include="bitmap7.bmp" />
-    <Image Include="Bullet.bmp" />
-=======
     <Image Include="sand.bmp" />
->>>>>>> 3d7b3b1dabd55918ededd3e96f576caaa25f8f01
     <Image Include="small.ico" />
     <Image Include="stage1배경.bmp" />
     <Image Include="water.bmp" />
