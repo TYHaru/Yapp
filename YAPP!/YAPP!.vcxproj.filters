@@ -105,5 +105,11 @@
     <Image Include="water.bmp">
       <Filter>리소스 파일</Filter>
     </Image>
+    <Image Include="Bullet.bmp">
+      <Filter>리소스 파일</Filter>
+    </Image>
+    <Image Include="bitmap14.bmp">
+      <Filter>리소스 파일</Filter>
+    </Image>
   </ItemGroup>
 </Project>

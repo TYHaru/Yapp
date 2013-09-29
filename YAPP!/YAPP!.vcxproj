@@ -20,7 +20,7 @@
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v110</PlatformToolset>
-    <CharacterSet>Unicode</CharacterSet>
+    <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
@@ -100,6 +100,8 @@
     <ResourceCompile Include="YAPP!.rc" />
   </ItemGroup>
   <ItemGroup>
+    <Image Include="bitmap14.bmp" />
+    <Image Include="Bullet.bmp" />
     <Image Include="sand.bmp" />
     <Image Include="small.ico" />
     <Image Include="stage1배경.bmp" />

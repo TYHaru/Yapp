@@ -133,17 +133,17 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	static TRAP trap[10];
 	static MapBox mapbox[HEIGHT][WIDTH] = {0};
 	int save[3] = {0};	 //save[0] = ac, save[1] = j_count1, save[2] = j_not
-	HDC hdc, hBitDC, mapDC, backDC, charDC;
-	HBITMAP hBit, mapbit;
+	HDC hdc, hBitDC, mapDC, backDC, charDC, BulletDC;
+	HBITMAP hBit, mapbit, Bulletbit;
 	HBITMAP backbitmap;	 //기존에 dc에 저장된 BitMap을 다른곳에 보관 해주면서 새 BitMap을 dc에 저장한다.
-	HBITMAP hOldBit,holdmap,holdchar; 
+	HBITMAP hOldBit,holdmap,holdchar, holdBullet; 
 	RECT rt={0,0,900,700};
 	static int player_bullet_direction;
 	static Bullet player_bullet[P_BULLET_MAX];
 	static int player_bullet_count[1] = {0};
 	static int enemy_count[1] = {0};
 	static int reset=0;
-	
+	char B[7] = "bullet";
 	SetTimer(hWnd, MOVE_TIMER_ID, 10, NULL);
 	SetTimer(hWnd, BULLET_TIMER_ID, 200, NULL); //총알 타이머
 
@@ -261,7 +261,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 							player_bullet[player_bullet_count[0]].left = player[0].right;
 							player_bullet[player_bullet_count[0]].right = player_bullet[player_bullet_count[0]].left + P_BULLETSIZE;
 						}
-						player_bullet[player_bullet_count[0]].top = player[0].top - 11;
+						player_bullet[player_bullet_count[0]].top = player[0].top + 11;
 						player_bullet[player_bullet_count[0]].bottom = player_bullet[player_bullet_count[0]].top + P_BULLETSIZE;
 						player_bullet_count[0]++;
 					}
@@ -287,6 +287,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 			hBitDC = CreateCompatibleDC(hdc);
 			mapDC = CreateCompatibleDC(hdc);
 			charDC = CreateCompatibleDC(hdc);
+			BulletDC = CreateCompatibleDC(hdc);
 			if(player[0].life==1)
 				mapbit=LoadBitmap(hInst,MAKEINTRESOURCE(IDB_BITMAP1));
 			else
@@ -295,9 +296,11 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 				hBit = LoadBitmap(hInst, MAKEINTRESOURCE(IDB_BITMAP2));
 			else if(stage/10==STAGE1)
 				hBit = LoadBitmap(hInst, MAKEINTRESOURCE(IDB_BITMAP7));
+			Bulletbit = LoadBitmap(hInst, MAKEINTRESOURCE(IDB_BITMAP15));
 			hOldBit = (HBITMAP)SelectObject(backDC, backbitmap);
 			holdmap = (HBITMAP)SelectObject(mapDC,hBit);
 			holdchar = (HBITMAP)SelectObject(charDC,mapbit);
+			holdBullet = (HBITMAP)SelectObject(BulletDC, Bulletbit);
 			SelectObject(backDC,hBit);
 			FillRect(backDC, &rt, (HBRUSH)GetStockObject(WHITE_BRUSH));
 			switch(stage/10)
@@ -309,7 +312,10 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 					DrawBlockStage1(hdc,backDC,mapDC,trap,stage,hInst,map);
 					break;
 			}
-			
+			for(int i=0; i<player_bullet_count[0]; i++){
+				//BitBlt(backDC, player_bullet[i].left, player_bullet[i].top, P_BULLETSIZE, P_BULLETSIZE, BulletDC , 0, 0, SRCCOPY);
+				TextOut(hdc, player_bullet[i].left, player_bullet[i].top, B, strlen(B)); 
+			}
 		TransparentBlt(backDC, player[0].left-BOXSIZE, player[0].top-BOXSIZE, PLAYERSIZE, PLAYERSIZE, charDC, 0, 0,PLAYERSIZE,PLAYERSIZE, RGB(255,255,255));
 		BitBlt(hdc,0,0,rt.right,rt.bottom,backDC,0,0,SRCCOPY);
 
