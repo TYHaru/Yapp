@@ -47,7 +47,7 @@ void tuto(Player *player, int *save, char (*map)[WIDTH], TRAP trap[],int * stage
 		TRAP inst[3]={{a[0],1,1,0,16,16,2,0,3,LRTYPE,DIE},
 		{a[1],1,1,0,15,16,2,0,1,LRTYPE,MOVE_LIMIT},
 		{a[2],2,1,0,29,14,17,0,1,UDTYPE,DIE}}; //{인식범위, 사라지는 상자 가로,세로, 카운트(기본 0),x좌표, 시작하는좌표,끝나는좌표,가속도,속도}
-		
+
 		trap[0]=inst[0];
 		trap[1]=inst[1];
 		trap[2]=inst[2];
@@ -64,12 +64,12 @@ void tuto(Player *player, int *save, char (*map)[WIDTH], TRAP trap[],int * stage
 	insert_map2(c_map, map);
 	//mapCheck2(player, map, save);
 }
-void DrawBlockTuto(HDC hdc,HDC backDC,HDC mapDC, TRAP trap[], int stage, HINSTANCE hInst, char (*map)[WIDTH])
+void DrawBlockTuto(HDC hdc,HDC backDC,HDC mapDC, TRAP trap[], int *stage, HINSTANCE hInst, char (*map)[WIDTH])
 {
 	HDC saveDC = CreateCompatibleDC(hdc);
 	HBITMAP savebit = LoadBitmap(hInst,MAKEINTRESOURCE(IDB_BITMAP11));
 	SelectObject(saveDC,savebit);
-	switch(stage)
+	switch(stage[0])
 			{
 				case TUTORIAL1:
 					for(int k=0;k<3;k++)
@@ -92,7 +92,7 @@ void DrawBlockTuto(HDC hdc,HDC backDC,HDC mapDC, TRAP trap[], int stage, HINSTAN
 					HBITMAP buttonbit = LoadBitmap(hInst,MAKEINTRESOURCE(IDB_BITMAP4));
 					HBITMAP kupabit = LoadBitmap(hInst,MAKEINTRESOURCE(IDB_BITMAP5));
 					HBITMAP firebit = LoadBitmap(hInst,MAKEINTRESOURCE(IDB_BITMAP6));
-					
+
 					SelectObject(ButtonDC,buttonbit);
 					SelectObject(kupaDC,kupabit);
 					SelectObject(fireDC,firebit);
@@ -110,7 +110,7 @@ void DrawBlockTuto(HDC hdc,HDC backDC,HDC mapDC, TRAP trap[], int stage, HINSTAN
 					}
 					if(trap[5].count==BOSSUP||trap[5].count==BOSSRAID || trap[5].count== BOSSFIRE || trap[5].count==BEATBOSS)
 					{
-						
+
 						if(trap[5].count!=BEATBOSS)
 							BitBlt(backDC,4*BOXSIZE,18*BOXSIZE,BOXSIZE,BOXSIZE,ButtonDC,0,0,SRCCOPY);
 						if(trap[5].count== BOSSFIRE)
@@ -118,6 +118,13 @@ void DrawBlockTuto(HDC hdc,HDC backDC,HDC mapDC, TRAP trap[], int stage, HINSTAN
 						BitBlt(backDC,trap[5].present.left,trap[5].present.top,210,290,kupaDC,0,0,SRCCOPY);
 					}
 
+					DeleteObject(buttonbit);
+					DeleteObject(firebit);
+					DeleteObject(kupabit);
+
+					DeleteDC(ButtonDC);
+					DeleteDC(fireDC);
+					DeleteDC(kupaDC);
 					break;
 			}
 			for(int i=0;i<HEIGHT-1;i++){
@@ -132,6 +139,8 @@ void DrawBlockTuto(HDC hdc,HDC backDC,HDC mapDC, TRAP trap[], int stage, HINSTAN
 					}
 				}
 			}
+			DeleteObject(savebit);
+			DeleteDC(saveDC);
 }
 void tuto2(Player *player, int *save, char (*map)[WIDTH], TRAP trap[], int * stage, MapBox (*mapbox)[WIDTH],int *reset)
 {
@@ -163,7 +172,7 @@ void tuto2(Player *player, int *save, char (*map)[WIDTH], TRAP trap[], int * sta
 	};
 	static char save_map[HEIGHT][WIDTH];
 	clear(0,210,30,270,player,stage,TUTORIAL1);
-	clear(25*BOXSIZE,21*BOXSIZE,27*BOXSIZE,22*BOXSIZE,player,stage,STAGE1_1);
+	clear(21*BOXSIZE,21*BOXSIZE,29*BOXSIZE,22*BOXSIZE,player,stage,STAGE1_1);
 	savePoint(2,7,3,8,player,stage,reset[0]);
 	if(first==0)
 		insert_map2(save_map,c_map);
@@ -175,7 +184,7 @@ void tuto2(Player *player, int *save, char (*map)[WIDTH], TRAP trap[], int * sta
 		{11*BOXSIZE,17*BOXSIZE,12*BOXSIZE,18*BOXSIZE},
 		{14*BOXSIZE,17*BOXSIZE,15*BOXSIZE,18*BOXSIZE}
 		};
-		
+
 		TRAP inst[4]={{a[0],2,1,0,5,8,3,0,4,DUTYPE,MOVE_LIMIT},
 		{a[1],4,3,0,3,18,21,0,6,UDTYPE,MOVE_LIMIT},
 		{a[2],1,1,0,11,18,3,2,3,DUTYPE,MOVE_LIMIT,RE},
@@ -228,8 +237,8 @@ void tuto2Set(Player player[], TRAP trap[], char (*map)[WIDTH], MapBox (*mapbox)
 		if(count==0){
 			trap[5].count=BOSSUP;
 		}
-		
-		
+
+
 		count++;
 		if(count%50==0&& count<200)
 		{
@@ -268,10 +277,10 @@ void bossRaid(Player player[], char (*map)[WIDTH], MapBox (*mapbox)[WIDTH],TRAP 
 
 
 	}
-	
+
 	if(trap[5].count==BOSSRAID|| trap[5].count== BOSSFIRE)
 	{
-		Box button={5*BOXSIZE,18*BOXSIZE,6*BOXSIZE,19*BOXSIZE};
+		Box button={5*BOXSIZE-PLAYERSIZE,18*BOXSIZE-PLAYERSIZE,6*BOXSIZE+PLAYERSIZE,19*BOXSIZE+PLAYERSIZE};
 
 		if(trap[5].present.bottom<17*BOXSIZE){
 			trap[5].present.top+=5;

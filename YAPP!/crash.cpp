@@ -182,12 +182,7 @@ void player_bullet_crash(Bullet *player_bullet, MapBox (*mapbox)[WIDTH], Enemy *
 	for(i=0; i<player_bullet_count[0]; i++){
 		if(bullet_check[i] == 1){
 			for(j=i; j<player_bullet_count[0]; j++){
-				player_bullet[j].PE = player_bullet[j+1].PE;
-				player_bullet[j].direction = player_bullet[j+1].direction;
-				player_bullet[j].left = player_bullet[j+1].left;
-				player_bullet[j].right = player_bullet[j+1].right;
-				player_bullet[j].top = player_bullet[j+1].top;
-				player_bullet[j].bottom = player_bullet[j+1].bottom;
+				player_bullet[j] = player_bullet[j+1];
 				player_bullet_count[0]--;
 			}
 		}

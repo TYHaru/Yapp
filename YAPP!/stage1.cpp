@@ -3,7 +3,7 @@
 #include "YAPP!.h"
 #include "gamedef.h"
 
-void DrawBlockStage1(HDC hdc,HDC backDC,HDC mapDC, TRAP trap[], int stage, HINSTANCE hInst, char (*map)[WIDTH])
+void DrawBlockStage1(HDC hdc,HDC backDC,HDC mapDC, TRAP trap[], int *stage, HINSTANCE hInst, char (*map)[WIDTH])
 {
 	HDC backgroundDC=CreateCompatibleDC(hdc);
 	HDC lavaDC=CreateCompatibleDC(hdc);
@@ -14,7 +14,7 @@ void DrawBlockStage1(HDC hdc,HDC backDC,HDC mapDC, TRAP trap[], int stage, HINST
 	HBITMAP backbit= LoadBitmap(hInst,MAKEINTRESOURCE(IDB_BITMAP8));
 	SelectObject(backgroundDC,backbit);
 	BitBlt(backDC, 0, 0, 900, 600, backgroundDC, 0, 0, SRCCOPY);
-	switch(stage)
+	switch(stage[0])
 	{
 		case STAGE1_1:
 			HBITMAP lavabit= LoadBitmap(hInst,MAKEINTRESOURCE(IDB_BITMAP12));
@@ -50,8 +50,18 @@ void DrawBlockStage1(HDC hdc,HDC backDC,HDC mapDC, TRAP trap[], int stage, HINST
 					}
 				}
 			}
-	
+			DeleteObject(lavabit);
+			DeleteObject(firebit);
+			DeleteObject(sandbit);
+			DeleteObject(savebit);
+			DeleteObject(waterbit);
 	}
+		DeleteDC(backgroundDC);
+		DeleteDC(lavaDC);
+		DeleteDC(fireDC);
+		DeleteDC(sandDC);
+		DeleteDC(saveDC);
+		DeleteDC(waterDC);
 }
 void stage1(Player *player, int *save, char (*map)[WIDTH], TRAP trap[], int * stage, MapBox (*mapbox)[WIDTH] , int * reset)
 {

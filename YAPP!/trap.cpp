@@ -2,7 +2,7 @@
 #include "stdafx.h"
 #include "YAPP!.h"
 #include "gamedef.h"
-	
+
 void trapf(TRAP *trap, Player *player, char (*map)[WIDTH], MapBox (*mapbox)[WIDTH], int save[])
 {
 	static int delay=10;
@@ -113,12 +113,12 @@ void trapf(TRAP *trap, Player *player, char (*map)[WIDTH], MapBox (*mapbox)[WIDT
 		}
 		trap_reco(*trap,player,save);
 	}
-	
+
 }
 void clear(int a,int b, int c, int d, Player * player,int * stage, int stagename)
 {
 	Box reco={a,b,c,d};
-			
+
 	if(recognizer(reco,*player))
 	{
 		(*stage)=stagename;
@@ -182,7 +182,7 @@ void moveLimit(TRAP trap,Player player[], int save[])
 			player[0].right=player[0].left+PLAYERSIZE;
 			player[1].left=player[0].left;
 			player[1].right=player[0].right;
-			
+
 		}
 		else if(player[1].bottom<=trap.present.top)
 		{
@@ -194,7 +194,7 @@ void moveLimit(TRAP trap,Player player[], int save[])
 			for(int k=0; k<3; k++){
 				save[k] = 0;
 			}
-			
+
 		}
 		else if(player[1].top>=trap.present.bottom)
 		{
@@ -202,7 +202,7 @@ void moveLimit(TRAP trap,Player player[], int save[])
 			player[0].bottom=player[0].top+PLAYERSIZE;
 			player[1].top=player[0].top;
 			player[1].bottom=player[0].bottom;
-			
+
 		}
 		else if(player[1].right>=trap.present.left)
 		{
@@ -210,9 +210,9 @@ void moveLimit(TRAP trap,Player player[], int save[])
 			player[0].right=player[1].right-3;
 			player[1].left-=trap.v;
 			player[1].right-=trap.v;
-			
+
 		}
-		
+
 		break;
 	case RLTYPE:
 		if(player[1].left>=trap.present.right)
@@ -325,7 +325,7 @@ void insert_map1(char (*map)[WIDTH], MapBox (*mapbox)[WIDTH]){
 			mapbox[i][j].top = i*30;
 			mapbox[i][j].bottom = mapbox[i][j].top + 30;
 			FC_insert(mapbox);
-			
+
 		}
 	}
 }

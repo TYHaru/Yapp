@@ -29,7 +29,7 @@ int APIENTRY _tWinMain(_In_ HINSTANCE hInstance,
 	LoadString(hInstance, IDS_APP_TITLE, szTitle, MAX_LOADSTRING);
 	LoadString(hInstance, IDC_YAPP, szWindowClass, MAX_LOADSTRING);
 	MyRegisterClass(hInstance);
-	
+
 	// 응용 프로그램 초기화를 수행합니다.
 	if (!InitInstance (hInstance, nCmdShow))
 	{
@@ -47,7 +47,7 @@ int APIENTRY _tWinMain(_In_ HINSTANCE hInstance,
 		DispatchMessage(&msg);
 		}
 	}
-	
+
 	return (int) msg.wParam;
 }
 
@@ -75,7 +75,7 @@ ATOM MyRegisterClass(HINSTANCE hInstance)
 	wcex.lpszMenuName	= MAKEINTRESOURCE(IDC_YAPP);
 	wcex.lpszClassName	= szWindowClass;
 	wcex.hIconSm	 = LoadIcon(wcex.hInstance, MAKEINTRESOURCE(IDI_SMALL));
-	
+
 	return RegisterClassEx(&wcex);
 }
 
@@ -93,19 +93,19 @@ ATOM MyRegisterClass(HINSTANCE hInstance)
 BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 {
 	HWND hWnd;
-	
+
 	hInst = hInstance; // 인스턴스 핸들을 전역 변수에 저장합니다.
-	
+
 	hWnd = CreateWindow(szWindowClass, szTitle, WS_OVERLAPPEDWINDOW,
 	CW_USEDEFAULT, 0, 920	, 700, NULL, NULL, hInstance, NULL);
-	
+
 	if (!hWnd)
 	{
 		return FALSE;
 	}
-	
+
 	ShowWindow(hWnd, nCmdShow);
-	
+
 	UpdateWindow(hWnd);
 
 	return TRUE;
@@ -125,24 +125,25 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
 	static int ac=0,j_flag=0,j_not=0;
 	static float j_count1=0;
-	static Player player[2] = {{130,130,130+PLAYERSIZE,130+PLAYERSIZE,1} , {130,130,130+PLAYERSIZE,130+PLAYERSIZE,1}}; //player[0]는 현재위치 player[1]은 전위치
+	static Player player[2]; //player[0]는 현재위치 player[1]은 전위치
 	PAINTSTRUCT ps;
 	static HANDLE hTimer;
 	static char map[HEIGHT][WIDTH]={};
-	static int stage=TUTORIAL1, trapKey[10];
+	static int stage[1]= {MENU}, trapKey[10];
 	static TRAP trap[10];
 	static MapBox mapbox[HEIGHT][WIDTH] = {0};
 	int save[3] = {0};	 //save[0] = ac, save[1] = j_count1, save[2] = j_not
 	HDC hdc, hBitDC, mapDC, backDC, charDC, BulletDC;
 	HBITMAP hBit, mapbit, Bulletbit;
 	HBITMAP backbitmap;	 //기존에 dc에 저장된 BitMap을 다른곳에 보관 해주면서 새 BitMap을 dc에 저장한다.
-	HBITMAP hOldBit,holdmap,holdchar, holdBullet; 
 	RECT rt={0,0,900,700};
 	static int player_bullet_direction;
 	static Bullet player_bullet[P_BULLET_MAX];
 	static int player_bullet_count[1] = {0};
 	static int enemy_count[1] = {0};
 	static int reset=0;
+	static int menu_arrow[1] = {1}; //1 = 처음하기, 2 = 이어하기, 3 = 끝내기
+	static int die_check = 0;
 	char B[7] = "bullet";
 	SetTimer(hWnd, MOVE_TIMER_ID, 10, NULL);
 	SetTimer(hWnd, BULLET_TIMER_ID, 200, NULL); //총알 타이머
@@ -150,17 +151,25 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	save[0] = ac;
 	save[1] = j_count1;
 	save[2] = j_not;
-	
-	switch(stage)
+
+	if((die_check == 1) && (stage[0] != MENU)){ //죽었다면 메뉴로감
+		menu_arrow[0] = 1;
+		stage[0] = MENU;
+	}
+
+	switch(stage[0])
 	{
+		case MENU:
+			menu(menu_arrow, player, reset, stage);
+			break;
 		case TUTORIAL1:
-			tuto(player, save, map,trap,&stage, mapbox,&reset);
+			tuto(player, save, map,trap,stage, mapbox,&reset);
 			break;
 		case TUTORIAL2:
-			tuto2(player,save,map,trap, &stage, mapbox, &reset);
+			tuto2(player,save,map,trap, stage, mapbox, &reset);
 			break;
 		case STAGE1_1:
-			stage1(player,save,map,trap, &stage, mapbox, &reset);
+			stage1(player,save,map,trap, stage, mapbox, &reset);
 			break;
 	}
 
@@ -168,11 +177,11 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	ac = save[0];
 	j_count1 = save[1];
 	j_not = save[2];
-	
-	
+
+
 	switch (message)
 	{
-	
+
 		case WM_CREATE :
 			hTimer=(HANDLE)SetTimer(hWnd,AC_TIMER_ID,50,NULL);
 			return 0;
@@ -181,10 +190,6 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		case WM_KEYDOWN:
 			switch(wParam)
 			{
-				case 'R':
-				case 'r':
-					reset=RESET;
-					return false;
 				case 'z': //위누르면 점프 2단까지 허용
 				case 'Z':
 					if(player[0].life==1 && j_count1<2 && j_not<1.1)
@@ -197,6 +202,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 					//	InvalidateRect(hWnd,NULL,false);
 						return false;
 					}
+				
 			}
 
 
@@ -223,7 +229,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 						KillTimer(hWnd,2); 
 					return false;
 				case MOVE_TIMER_ID:
-					if(player[0].life!=0)
+					if((player[0].life!=0) && (stage[0] != MENU))
 					{
 						if(GetAsyncKeyState(VK_LEFT) < 0) //왼쪽ㄱㄱ
 						{
@@ -290,21 +296,26 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 			BulletDC = CreateCompatibleDC(hdc);
 			if(player[0].life==1)
 				mapbit=LoadBitmap(hInst,MAKEINTRESOURCE(IDB_BITMAP1));
-			else
+			else{
 				mapbit=LoadBitmap(hInst,MAKEINTRESOURCE(IDB_BITMAP3));
-			if(stage/10==TUTO)
+				die_check = 1;
+			}
+			if(stage[0]/10==TUTO)
 				hBit = LoadBitmap(hInst, MAKEINTRESOURCE(IDB_BITMAP2));
-			else if(stage/10==STAGE1)
+			else if(stage[0]/10==STAGE1)
 				hBit = LoadBitmap(hInst, MAKEINTRESOURCE(IDB_BITMAP7));
 			Bulletbit = LoadBitmap(hInst, MAKEINTRESOURCE(IDB_BITMAP15));
-			hOldBit = (HBITMAP)SelectObject(backDC, backbitmap);
-			holdmap = (HBITMAP)SelectObject(mapDC,hBit);
-			holdchar = (HBITMAP)SelectObject(charDC,mapbit);
-			holdBullet = (HBITMAP)SelectObject(BulletDC, Bulletbit);
+			SelectObject(backDC, backbitmap);
+			SelectObject(mapDC,hBit);
+			SelectObject(charDC,mapbit);
+			SelectObject(BulletDC, Bulletbit);
 			SelectObject(backDC,hBit);
 			FillRect(backDC, &rt, (HBRUSH)GetStockObject(WHITE_BRUSH));
-			switch(stage/10)
+			switch(stage[0]/10)
 			{
+				case MENU:
+					DrawMenu(hInst, hdc, backDC, menu_arrow);
+					break;
 				case TUTO:
 					DrawBlockTuto(hdc,backDC,mapDC,trap,stage,hInst,map);
 					break;
@@ -322,11 +333,17 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 // TODO: 여기에 그리기 코드를 추가합니다.
 // SelectObject(hBitDC, hOldBit); 
 // SelectObject(mapDC, holdmap); 
+		DeleteObject(backbitmap);
 		DeleteObject(hBit);
+		DeleteObject(Bulletbit);
 		DeleteObject(mapbit);
+		DeleteDC(hBitDC);
 		DeleteDC(backDC);
+		DeleteDC(BulletDC);
+		DeleteDC(hdc);
 		DeleteDC(mapDC);
-		
+		DeleteDC(charDC);
+
 		EndPaint(hWnd, &ps);
 		return FALSE;
 	case WM_DESTROY:
@@ -340,5 +357,3 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	}
 	return 0;
 }
-
-
