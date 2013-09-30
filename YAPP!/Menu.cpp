@@ -42,18 +42,18 @@ void DrawMenu(HDC hdc, HDC backDC, HINSTANCE hInst, int *menu_arrow){
 	SelectObject(ExitDC, Exitbit);
 	SelectObject(PlayerDC, Playerbit);
 	BitBlt(backDC, 0, 0, 900, 600, BackgroundDC, 0, 0, SRCCOPY);
-	BitBlt(backDC, 80, 230, 200, 200, BeginDC, 0, 0, SRCCOPY);
-	BitBlt(backDC, 340, 230, 200, 200, SaveDC, 0, 0, SRCCOPY);
-	BitBlt(backDC, 600, 234, 200, 200, ExitDC, 0, 0, SRCCOPY);
+	TransparentBlt(backDC, 80, 230, 200, 200, BeginDC, 0, 0, 200, 200, RGB(255,255,255));
+	TransparentBlt(backDC, 340, 230, 200, 200, SaveDC, 0, 0, 200, 200, RGB(255,255,255));
+	TransparentBlt(backDC, 600, 230, 200, 200, ExitDC, 0, 0, 200, 200, RGB(255,255,255));
 	switch(menu_arrow[0]){
 		case BEGIN:
-			BitBlt(backDC, 170, 470, PLAYERSIZE, PLAYERSIZE, PlayerDC, 0, 0, SRCCOPY);
+			TransparentBlt(backDC, 170, 470, PLAYERSIZE, PLAYERSIZE, PlayerDC, 0, 0, PLAYERSIZE, PLAYERSIZE, RGB(255,255,255));
 			break;
 		case SAVE:
-			BitBlt(backDC, 430, 470, PLAYERSIZE, PLAYERSIZE, PlayerDC, 0, 0, SRCCOPY);
+			TransparentBlt(backDC, 430, 470, PLAYERSIZE, PLAYERSIZE, PlayerDC, 0, 0, PLAYERSIZE, PLAYERSIZE, RGB(255,255,255));
 			break;
 		case EXIT:
-			BitBlt(backDC, 690, 470, PLAYERSIZE, PLAYERSIZE, PlayerDC, 0, 0, SRCCOPY);
+			TransparentBlt(backDC, 690, 470, PLAYERSIZE, PLAYERSIZE, PlayerDC, 0, 0, PLAYERSIZE, PLAYERSIZE, RGB(255,255,255));
 			break;
 	}
 	DeleteObject(Backgroundbit);

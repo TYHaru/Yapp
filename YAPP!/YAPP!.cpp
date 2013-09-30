@@ -153,13 +153,6 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	save[1] = j_count1;
 	save[2] = j_not;
 
-	
-	if(die_check == 1){
-		die_check = 0;
-		menu_arrow[0] = 1;
-		menu_select = 0;
-		stage[0] = MENU;
-	}
 
 	switch(stage[0])
 	{
@@ -229,83 +222,84 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 					}
 			}
 
-
-		case WM_TIMER:
-			switch(wParam)
-			{
-				case AC_TIMER_ID: //중력처리
-					if(ac<17)
-						ac+=2;
-					player[1].top = player[0].top;
-					player[0].top+=ac;
-					player[1].bottom = player[0].bottom;
-					player[0].bottom+=ac;
-					InvalidateRect(hWnd,NULL,FALSE);
-					return false;
-
-				case JUMP_TIMER_ID:
-					player[1].top = player[0].top;
-					player[0].top-=(20-j_flag*3); //점프 올라갈수록 느려짐
-					player[1].bottom = player[0].bottom;
-					player[0].bottom-=(20-j_flag*3);
-					j_flag++;
-					if(j_flag==4)
-						KillTimer(hWnd,2); 
-					return false;
-				case MOVE_TIMER_ID:
-					if(player[0].life!=0)
+			if(stage[0] != MENU){
+				case WM_TIMER:
+					switch(wParam)
 					{
-						if(GetAsyncKeyState(VK_LEFT) < 0) //왼쪽ㄱㄱ
+					case AC_TIMER_ID: //중력처리
+						if(ac<17)
+							ac+=2;
+						player[1].top = player[0].top;
+						player[0].top+=ac;
+						player[1].bottom = player[0].bottom;
+						player[0].bottom+=ac;
+						InvalidateRect(hWnd,NULL,FALSE);
+						return false;
+
+					case JUMP_TIMER_ID:
+						player[1].top = player[0].top;
+						player[0].top-=(20-j_flag*3); //점프 올라갈수록 느려짐
+						player[1].bottom = player[0].bottom;
+						player[0].bottom-=(20-j_flag*3);
+						j_flag++;
+						if(j_flag==4)
+							KillTimer(hWnd,2); 
+						return false;
+					case MOVE_TIMER_ID:
+						if(player[0].life!=0)
 						{
-							if(LR_Crash(map, player, mapbox, LEFT)) // if 문 추가로 입력
+							if(GetAsyncKeyState(VK_LEFT) < 0) //왼쪽ㄱㄱ
 							{
-								player_bullet_direction = WW;
-								player[1].left = player[0].left;
-								player[0].left -= 3;
-								player[1].right = player[0].right;
-								player[0].right -= 3;
+								if(LR_Crash(map, player, mapbox, LEFT)) // if 문 추가로 입력
+								{
+									player_bullet_direction = WW;
+									player[1].left = player[0].left;
+									player[0].left -= 3;
+									player[1].right = player[0].right;
+									player[0].right -= 3;
+								}
+							}
+							if(GetAsyncKeyState(VK_RIGHT) < 0) //오른쪽 ㄱㄱ
+							{
+								if(LR_Crash(map, player, mapbox, RIGHT))//if 문 추가로 입력 (이동 불가하게 만듬)
+								{
+									player_bullet_direction = EE;
+									player[1].left = player[0].left;
+									player[0].left += 3;
+									player[1].right = player[0].right;
+									player[0].right += 3;
+								}
 							}
 						}
-						if(GetAsyncKeyState(VK_RIGHT) < 0) //오른쪽 ㄱㄱ
+						return false;
+					case BULLET_TIMER_ID:
+						if(GetAsyncKeyState(0x58) < 0) // X = Bullet
 						{
-							if(LR_Crash(map, player, mapbox, RIGHT))//if 문 추가로 입력 (이동 불가하게 만듬)
-							{
-								player_bullet_direction = EE;
-								player[1].left = player[0].left;
-								player[0].left += 3;
-								player[1].right = player[0].right;
-								player[0].right += 3;
+							player_bullet[player_bullet_count[0]].direction = player_bullet_direction;
+							if(player_bullet[player_bullet_count[0]].direction == WW){
+								player_bullet[player_bullet_count[0]].right = player[0].left;
+								player_bullet[player_bullet_count[0]].left = player_bullet[player_bullet_count[0]].right - P_BULLETSIZE;
+							}
+							else if(player_bullet[player_bullet_count[0]].direction == EE){
+								player_bullet[player_bullet_count[0]].left = player[0].right;
+								player_bullet[player_bullet_count[0]].right = player_bullet[player_bullet_count[0]].left + P_BULLETSIZE;
+							}
+							player_bullet[player_bullet_count[0]].top = player[0].top + 11;
+							player_bullet[player_bullet_count[0]].bottom = player_bullet[player_bullet_count[0]].top + P_BULLETSIZE;
+							player_bullet_count[0]++;
+						}
+						for(int i=0; i<player_bullet_count[0]; i++){
+							if(player_bullet[i].direction == WW){
+								player_bullet[i].right -= 10;
+								player_bullet[i].left = player_bullet[i].right - P_BULLETSIZE;
+							}
+							else if(player_bullet[i].direction == EE){
+								player_bullet[i].left += 10;
+								player_bullet[i].right = player_bullet[i].left + P_BULLETSIZE;
 							}
 						}
+						return false;
 					}
-					return false;
-				case BULLET_TIMER_ID:
-					if(GetAsyncKeyState(0x58) < 0) // X = Bullet
-					{
-						player_bullet[player_bullet_count[0]].direction = player_bullet_direction;
-						if(player_bullet[player_bullet_count[0]].direction == WW){
-							player_bullet[player_bullet_count[0]].right = player[0].left;
-							player_bullet[player_bullet_count[0]].left = player_bullet[player_bullet_count[0]].right - P_BULLETSIZE;
-						}
-						else if(player_bullet[player_bullet_count[0]].direction == EE){
-							player_bullet[player_bullet_count[0]].left = player[0].right;
-							player_bullet[player_bullet_count[0]].right = player_bullet[player_bullet_count[0]].left + P_BULLETSIZE;
-						}
-						player_bullet[player_bullet_count[0]].top = player[0].top + 11;
-						player_bullet[player_bullet_count[0]].bottom = player_bullet[player_bullet_count[0]].top + P_BULLETSIZE;
-						player_bullet_count[0]++;
-					}
-					for(int i=0; i<player_bullet_count[0]; i++){
-						if(player_bullet[i].direction == WW){
-							player_bullet[i].right -= 10;
-							player_bullet[i].left = player_bullet[i].right - P_BULLETSIZE;
-						}
-						else if(player_bullet[i].direction == EE){
-							player_bullet[i].left += 10;
-							player_bullet[i].right = player_bullet[i].left + P_BULLETSIZE;
-						}
-					}
-					return false;
 			}
 
 
