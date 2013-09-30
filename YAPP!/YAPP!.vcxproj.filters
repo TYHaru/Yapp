@@ -53,6 +53,9 @@
     <ClCompile Include="stage1.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="Menu.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="YAPP!.rc">
@@ -109,6 +112,18 @@
       <Filter>리소스 파일</Filter>
     </Image>
     <Image Include="bitmap14.bmp">
+      <Filter>리소스 파일</Filter>
+    </Image>
+    <Image Include="배경화면.bmp">
+      <Filter>리소스 파일</Filter>
+    </Image>
+    <Image Include="짱 Boss.bmp">
+      <Filter>리소스 파일</Filter>
+    </Image>
+    <Image Include="youknow boss.bmp">
+      <Filter>리소스 파일</Filter>
+    </Image>
+    <Image Include="꾸 boss.bmp">
       <Filter>리소스 파일</Filter>
     </Image>
   </ItemGroup>

@@ -1,6 +1,4 @@
 
-#pragma comment(lib, "msimg32.lib")
-
 #define		PLAYERSIZE			20
 #define		BOXSIZE				30
 #define		P_BULLETSIZE		2
@@ -19,15 +17,16 @@
 #define		RIGHT				2
 #define		DIE					1
 #define		MOVE_LIMIT			2
-#define		TUTO				0
-#define		TUTORIAL1			01
-#define		TUTORIAL2			02
-#define		STAGE1				1
-#define		STAGE1_1			11
-#define		STAGE1_2			12
-#define		STAGE2				2
-#define		STAGE2_1			21
-#define		STAGE2_2			22
+#define		MENU				0
+#define		TUTO				1
+#define		TUTORIAL1			11
+#define		TUTORIAL2			12
+#define		STAGE1				2
+#define		STAGE1_1			21
+#define		STAGE1_2			22
+#define		STAGE2				3
+#define		STAGE2_1			31
+#define		STAGE2_2			32
 #define		WIDTH				32
 #define		HEIGHT				22
 #define		NN					1		//북
@@ -39,6 +38,9 @@
 #define		WW					7		//서
 #define		NW					8		//북서
 #define		RESET				100
+#define		BEGIN				1
+#define		SAVE				2
+#define		EXIT				3
 
 //trap관련 메크로
 #define		UDTYPE				1		//위에서 아래: 1 /아래에서 위 : 2 /좌에서 우 : 3 / 우에서 좌 : 4
@@ -112,8 +114,8 @@ typedef struct{
 //함수 원형
 void trapf(TRAP *trap, Player *player, char (*map)[WIDTH]);			//트랩 펑션 함정을 손쉽게 정의할 수 있는 함수다.
 																	//간단하게 블럭을 상하좌우로 움직일때 사용하면 좋다.	
-void tuto(Player *player, int *save, char (*map)[WIDTH], TRAP trap[],int * stage, MapBox (*mapbox)[WIDTH], int *reset);	//튜토리얼함수다
-void tuto2(Player *player, int *save, char (*map)[WIDTH], TRAP trap[], int * stage, MapBox (*mapbox)[WIDTH], int * reset);
+void tuto(Player *player, int *save, char (*map)[WIDTH], TRAP trap[],int *stage, MapBox (*mapbox)[WIDTH], int *reset);	//튜토리얼함수다
+void tuto2(Player *player, int *save, char (*map)[WIDTH], TRAP trap[], int *stage, MapBox (*mapbox)[WIDTH], int * reset);
 
 void player_bullet_crash(Bullet *player_bullet, MapBox (*mapbox)[WIDTH], Enemy *enemy, int *enemy_count, int *player_bullet_count); //총알 충돌함수
 BOOL recognizer(Box a,Player player);								//인식범위를 결정하는 함수 인식범위 내에 들어오면 TRUE를 반환한다
@@ -124,13 +126,15 @@ BOOL LR_Crash(char (*map)[WIDTH], Player *player, MapBox (*mapbox)[WIDTH], int k
 void FC_Crash(Player *player, char (*map)[WIDTH], int *save, MapBox (*mapbox)[WIDTH]); //상하 충돌 함수
 BOOL limit(char (*map)[WIDTH],Player player[], int key);
 void trapf(TRAP *trap, Player *player, char (*map)[WIDTH], MapBox (*mapbox)[WIDTH], int save[]);
-void clear(int a,int b, int c, int d, Player * player,int * stage, int stagename);	//좌위우아래 순으로 초기화
+void clear(int a,int b, int c, int d, Player * player,int *stage, int stagename);	//좌위우아래 순으로 초기화
 void FC_insert(MapBox (*mapbox)[WIDTH]);
 BOOL trap_reco(TRAP trap,Player player[], int save[]);
 void moveLimit(TRAP trap,Player player[], int save[]);
-void DrawBlockTuto(HDC hdc,HDC backDC,HDC mapDC, TRAP trap[], int stage, HINSTANCE hInst, char (*map)[WIDTH]);
+void DrawBlockTuto(HDC hdc,HDC backDC,HDC mapDC, TRAP trap[], int *stage, HINSTANCE hInst, char (*map)[WIDTH]);
 void tuto2Set(Player player[], TRAP trap[], char (*map)[WIDTH], MapBox (*mapbox)[WIDTH]);
 void bossRaid(Player player[], char (*map)[WIDTH], MapBox (*mapbox)[WIDTH],TRAP trap[]);
-void stage1(Player *player, int *save, char (*map)[WIDTH], TRAP trap[], int * stage, MapBox (*mapbox)[WIDTH], int * reset);
-void DrawBlockStage1(HDC hdc,HDC backDC,HDC mapDC, TRAP trap[], int stage, HINSTANCE hInst, char (*map)[WIDTH]);
-void savePoint(int a,int b, int c, int d,Player player[],int* stage,int reset);
+void stage1(Player *player, int *save, char (*map)[WIDTH], TRAP trap[], int *stage, MapBox (*mapbox)[WIDTH], int * reset);
+void DrawBlockStage1(HDC hdc,HDC backDC,HDC mapDC, TRAP trap[], int *stage, HINSTANCE hInst, char (*map)[WIDTH]);
+void savePoint(int a,int b, int c, int d,Player player[],int *stage,int reset);
+void menu(int *menu_arrow, Player *player, int reset, int *stage, int menu_select);
+void DrawMenu(HDC hdc, HDC backDC, HINSTANCE hInst, int *menu_arrow);

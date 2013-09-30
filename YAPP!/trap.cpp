@@ -2,13 +2,9 @@
 #include "stdafx.h"
 #include "YAPP!.h"
 #include "gamedef.h"
-	
+
 void trapf(TRAP *trap, Player *player, char (*map)[WIDTH], MapBox (*mapbox)[WIDTH], int save[])
 {
-<<<<<<< HEAD
-	Box save_p[2]={{trap[0].start*BOXSIZE,trap[0].hold*BOXSIZE,trap[0].start*BOXSIZE+BOXSIZE*trap[0].val,trap[0].hold*BOXSIZE+BOXSIZE*trap[0].hor},
-	{trap[0].hold*BOXSIZE,trap[0].start*BOXSIZE,trap[0].hold*BOXSIZE+BOXSIZE*trap[0].val,trap[0].start*BOXSIZE+BOXSIZE*trap[0].hor}};
-=======
 	static int delay=10;
 	static TRAP trap_c=trap[0];
 	Box save_p[2]={{trap[0].start*BOXSIZE,trap[0].hold*BOXSIZE,trap[0].start*BOXSIZE+BOXSIZE*trap[0].val,trap[0].hold*BOXSIZE+BOXSIZE*trap[0].hor},
@@ -33,18 +29,12 @@ void trapf(TRAP *trap, Player *player, char (*map)[WIDTH], MapBox (*mapbox)[WIDT
 					FC_insert(mapbox);
 			}
 	}
->>>>>>> ac7ace79c321be133f6c21352210e6e2d143f13c
 
 	if( trap[0].count != 1&& trap[0].count != 2 && recognizer(trap[0].reco,*player))						//인식범위 좌측 우측모두 0부터시작
 	{
 		for(int i=0;i<trap[0].hor;i++)
 			for(int j=0;j<trap[0].val;j++)				//지우는 것
 			{
-<<<<<<< HEAD
-				map[trap[0].start+i][trap[0].hold+j]=' ';
-				mapbox[trap[0].start+i][trap[0].hold+j].value=' ';
-				FC_insert(mapbox);
-=======
 				if(trap[0].type==UDTYPE||trap[0].type==DUTYPE)
 				{
 					map[trap[0].start+i][trap[0].hold+j]=' ';
@@ -56,7 +46,6 @@ void trapf(TRAP *trap, Player *player, char (*map)[WIDTH], MapBox (*mapbox)[WIDT
 					mapbox[trap[0].hold+i][trap[0].start+j].value=' ';
 				}
 					FC_insert(mapbox);
->>>>>>> ac7ace79c321be133f6c21352210e6e2d143f13c
 			}
 		if(trap[0].type==LRTYPE||trap[0].type==LRTYPE)
 			trap[0].present=save_p[0]; 
@@ -73,12 +62,8 @@ void trapf(TRAP *trap, Player *player, char (*map)[WIDTH], MapBox (*mapbox)[WIDT
 			{
 				trap[0].present.left+=trap[0].v;
 				trap[0].present.right+=trap[0].v;
-<<<<<<< HEAD
-				trap[0].v+=trap[0].ac;
-=======
 				if((delay++)%100==0)
 					trap[0].v+=trap[0].ac;
->>>>>>> ac7ace79c321be133f6c21352210e6e2d143f13c
 				if(trap[0].present.left>=trap[0].end*BOXSIZE)
 				{
 					trap[0].count=2;
@@ -90,12 +75,8 @@ void trapf(TRAP *trap, Player *player, char (*map)[WIDTH], MapBox (*mapbox)[WIDT
 			{
 				trap[0].present.top+=trap[0].v;
 				trap[0].present.bottom+=trap[0].v;
-<<<<<<< HEAD
-				trap[0].v+=trap[0].ac;
-=======
 				if((delay++)%100==0)
 					trap[0].v+=trap[0].ac;
->>>>>>> ac7ace79c321be133f6c21352210e6e2d143f13c
 				if(trap[0].present.top>=trap[0].end*BOXSIZE)
 				{
 					trap[0].count=2;
@@ -108,12 +89,8 @@ void trapf(TRAP *trap, Player *player, char (*map)[WIDTH], MapBox (*mapbox)[WIDT
 			{
 				trap[0].present.left-=trap[0].v;
 				trap[0].present.right-=trap[0].v;
-<<<<<<< HEAD
-				trap[0].v+=trap[0].ac;
-=======
 				if((delay++)%100==0)
 					trap[0].v+=trap[0].ac;
->>>>>>> ac7ace79c321be133f6c21352210e6e2d143f13c
 				if(trap[0].present.left<=trap[0].end*BOXSIZE)
 				{
 					trap[0].count=2;
@@ -125,12 +102,8 @@ void trapf(TRAP *trap, Player *player, char (*map)[WIDTH], MapBox (*mapbox)[WIDT
 			{
 				trap[0].present.top-=trap[0].v;
 				trap[0].present.bottom-=trap[0].v;
-<<<<<<< HEAD
-				trap[0].v+=trap[0].ac;
-=======
 				if((delay++)%100==0)
 					trap[0].v+=trap[0].ac;
->>>>>>> ac7ace79c321be133f6c21352210e6e2d143f13c
 				if(trap[0].present.top<=trap[0].end*BOXSIZE)
 				{
 					trap[0].count=2;
@@ -139,42 +112,13 @@ void trapf(TRAP *trap, Player *player, char (*map)[WIDTH], MapBox (*mapbox)[WIDT
 			break;
 		}
 		trap_reco(*trap,player,save);
-<<<<<<< HEAD
-/*			
-		if(trap[0].end>trap[0].start)					//만약 위에서 아래, 좌에서 우로 이동시	
-		{
-			if(trap[0].present<trap[0].end*BOXSIZE)		
-			{
-				trap[0].present+=trap[0].v;
-				trap[0].v+=trap[0].ac;
-				if(trap[0].present>=trap[0].end*BOXSIZE)
-				{
-					trap[0].count=2;
-				}
-			}
-		}
-		else if(trap[0].end<trap[0].start)			//만약 아래에서 위, 우에서 좌로 이동시
-		{
-			if(trap[0].present>trap[0].end*BOXSIZE)		
-			{
-				trap[0].present-=trap[0].v;
-				trap[0].v+=trap[0].ac;
-				if(trap[0].present<=trap[0].end*BOXSIZE)
-				{
-					trap[0].count=2;
-				}
-			}
-		}
-		*/
-=======
->>>>>>> ac7ace79c321be133f6c21352210e6e2d143f13c
 	}
-	
+
 }
 void clear(int a,int b, int c, int d, Player * player,int * stage, int stagename)
 {
 	Box reco={a,b,c,d};
-			
+
 	if(recognizer(reco,*player))
 	{
 		(*stage)=stagename;
@@ -238,7 +182,7 @@ void moveLimit(TRAP trap,Player player[], int save[])
 			player[0].right=player[0].left+PLAYERSIZE;
 			player[1].left=player[0].left;
 			player[1].right=player[0].right;
-			
+
 		}
 		else if(player[1].bottom<=trap.present.top)
 		{
@@ -250,7 +194,7 @@ void moveLimit(TRAP trap,Player player[], int save[])
 			for(int k=0; k<3; k++){
 				save[k] = 0;
 			}
-			
+
 		}
 		else if(player[1].top>=trap.present.bottom)
 		{
@@ -258,7 +202,7 @@ void moveLimit(TRAP trap,Player player[], int save[])
 			player[0].bottom=player[0].top+PLAYERSIZE;
 			player[1].top=player[0].top;
 			player[1].bottom=player[0].bottom;
-			
+
 		}
 		else if(player[1].right>=trap.present.left)
 		{
@@ -266,9 +210,9 @@ void moveLimit(TRAP trap,Player player[], int save[])
 			player[0].right=player[1].right-3;
 			player[1].left-=trap.v;
 			player[1].right-=trap.v;
-			
+
 		}
-		
+
 		break;
 	case RLTYPE:
 		if(player[1].left>=trap.present.right)
@@ -381,7 +325,7 @@ void insert_map1(char (*map)[WIDTH], MapBox (*mapbox)[WIDTH]){
 			mapbox[i][j].top = i*30;
 			mapbox[i][j].bottom = mapbox[i][j].top + 30;
 			FC_insert(mapbox);
-			
+
 		}
 	}
 }
