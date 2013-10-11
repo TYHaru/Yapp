@@ -111,7 +111,10 @@
     <Image Include="YAPP!.ico" />
     <Image Include="youknow boss.bmp" />
     <Image Include="꾸 boss.bmp" />
+<<<<<<< HEAD
     <Image Include="뀨 Boss.bmp" />
+=======
+>>>>>>> master
     <Image Include="드래곤브래스.bmp" />
     <Image Include="배경화면.bmp" />
     <Image Include="버튼.bmp" />

@@ -63,7 +63,7 @@ void DrawBlockStage1(HDC hdc,HDC backDC,HDC mapDC, TRAP trap[], int *stage, HINS
 		DeleteDC(saveDC);
 		DeleteDC(waterDC);
 }
-void stage1(Player *player, int *save, char (*map)[WIDTH], TRAP trap[], int * stage, MapBox (*mapbox)[WIDTH] , int * reset)
+void stage1(Player *player, int *save, char (*map)[WIDTH], TRAP trap[], int *stage, MapBox (*mapbox)[WIDTH] , int * reset)
 {
 	static int first=0;
 	static char c_map[HEIGHT][WIDTH]={

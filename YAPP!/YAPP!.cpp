@@ -129,7 +129,11 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	PAINTSTRUCT ps;
 	static HANDLE hTimer;
 	static char map[HEIGHT][WIDTH]={};
+<<<<<<< HEAD
 	static int stage[1]= {MENU}, trapKey[10];
+=======
+	static int stage[1]={MENU}, trapKey[10];
+>>>>>>> master
 	static TRAP trap[10];
 	static MapBox mapbox[HEIGHT][WIDTH] = {0};
 	int save[3] = {0};	 //save[0] = ac, save[1] = j_count1, save[2] = j_not
@@ -142,9 +146,15 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	static int player_bullet_count[1] = {0};
 	static int enemy_count[1] = {0};
 	static int reset=0;
+<<<<<<< HEAD
 	static int menu_arrow[1] = {1}; //1 = 처음하기, 2 = 이어하기, 3 = 끝내기
 	static int die_check = 0;
+=======
+	static int menu_select = 0;
+>>>>>>> master
 	char B[7] = "bullet";
+	static int menu_arrow[1] = {1}; //1 = 처음하기, 2 = 이어하기, 3 = 끝내기
+	static int die_check = 0;
 	SetTimer(hWnd, MOVE_TIMER_ID, 10, NULL);
 	SetTimer(hWnd, BULLET_TIMER_ID, 200, NULL); //총알 타이머
 
@@ -152,16 +162,30 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	save[1] = j_count1;
 	save[2] = j_not;
 
+<<<<<<< HEAD
 	if((die_check == 1) && (stage[0] != MENU)){ //죽었다면 메뉴로감
 		menu_arrow[0] = 1;
 		stage[0] = MENU;
 	}
+=======
+>>>>>>> master
 
 	switch(stage[0])
 	{
 		case MENU:
+<<<<<<< HEAD
 			menu(menu_arrow, player, reset, stage);
 			break;
+=======
+			menu(menu_arrow, player, reset, stage, menu_select);
+			break;
+		if(die_check == 1){
+			die_check = 0;
+			menu_arrow[0] = 1;
+			menu_select = 0;
+			stage[0] = MENU;
+		}
+>>>>>>> master
 		case TUTORIAL1:
 			tuto(player, save, map,trap,stage, mapbox,&reset);
 			break;
@@ -172,7 +196,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 			stage1(player,save,map,trap, stage, mapbox, &reset);
 			break;
 	}
-
+	
 
 	ac = save[0];
 	j_count1 = save[1];
@@ -190,6 +214,24 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		case WM_KEYDOWN:
 			switch(wParam)
 			{
+<<<<<<< HEAD
+=======
+				if(stage[0] == MENU){
+					case VK_LEFT:
+						if(menu_arrow[0] > 1){
+							menu_arrow[0]--;
+						}
+						return FALSE;
+					case VK_RIGHT:
+						if(menu_arrow[0] < 3){
+							menu_arrow[0]++;
+						}
+						return FALSE;
+					case VK_RETURN:
+						menu_select = menu_arrow[0];
+						return FALSE;
+				}
+>>>>>>> master
 				case 'z': //위누르면 점프 2단까지 허용
 				case 'Z':
 					if(player[0].life==1 && j_count1<2 && j_not<1.1)
@@ -205,6 +247,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 				
 			}
 
+<<<<<<< HEAD
 
 		case WM_TIMER:
 			switch(wParam)
@@ -230,58 +273,86 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 					return false;
 				case MOVE_TIMER_ID:
 					if((player[0].life!=0) && (stage[0] != MENU))
+=======
+			if(stage[0] != MENU){
+				case WM_TIMER:
+					switch(wParam)
+>>>>>>> master
 					{
-						if(GetAsyncKeyState(VK_LEFT) < 0) //왼쪽ㄱㄱ
+					case AC_TIMER_ID: //중력처리
+						if(ac<17)
+							ac+=2;
+						player[1].top = player[0].top;
+						player[0].top+=ac;
+						player[1].bottom = player[0].bottom;
+						player[0].bottom+=ac;
+						InvalidateRect(hWnd,NULL,FALSE);
+						return false;
+
+					case JUMP_TIMER_ID:
+						player[1].top = player[0].top;
+						player[0].top-=(20-j_flag*3); //점프 올라갈수록 느려짐
+						player[1].bottom = player[0].bottom;
+						player[0].bottom-=(20-j_flag*3);
+						j_flag++;
+						if(j_flag==4)
+							KillTimer(hWnd,2); 
+						return false;
+					case MOVE_TIMER_ID:
+						if(player[0].life!=0)
 						{
-							if(LR_Crash(map, player, mapbox, LEFT)) // if 문 추가로 입력
+							if(GetAsyncKeyState(VK_LEFT) < 0) //왼쪽ㄱㄱ
 							{
-								player_bullet_direction == WW;
-								player[1].left = player[0].left;
-								player[0].left -= 3;
-								player[1].right = player[0].right;
-								player[0].right -= 3;
+								if(LR_Crash(map, player, mapbox, LEFT)) // if 문 추가로 입력
+								{
+									player_bullet_direction = WW;
+									player[1].left = player[0].left;
+									player[0].left -= 3;
+									player[1].right = player[0].right;
+									player[0].right -= 3;
+								}
+							}
+							if(GetAsyncKeyState(VK_RIGHT) < 0) //오른쪽 ㄱㄱ
+							{
+								if(LR_Crash(map, player, mapbox, RIGHT))//if 문 추가로 입력 (이동 불가하게 만듬)
+								{
+									player_bullet_direction = EE;
+									player[1].left = player[0].left;
+									player[0].left += 3;
+									player[1].right = player[0].right;
+									player[0].right += 3;
+								}
 							}
 						}
-						if(GetAsyncKeyState(VK_RIGHT) < 0) //오른쪽 ㄱㄱ
+						return false;
+					case BULLET_TIMER_ID:
+						if(GetAsyncKeyState(0x58) < 0) // X = Bullet
 						{
-							if(LR_Crash(map, player, mapbox, RIGHT))//if 문 추가로 입력 (이동 불가하게 만듬)
-							{
-								player_bullet_direction == EE;
-								player[1].left = player[0].left;
-								player[0].left += 3;
-								player[1].right = player[0].right;
-								player[0].right += 3;
+							player_bullet[player_bullet_count[0]].direction = player_bullet_direction;
+							if(player_bullet[player_bullet_count[0]].direction == WW){
+								player_bullet[player_bullet_count[0]].right = player[0].left;
+								player_bullet[player_bullet_count[0]].left = player_bullet[player_bullet_count[0]].right - P_BULLETSIZE;
+							}
+							else if(player_bullet[player_bullet_count[0]].direction == EE){
+								player_bullet[player_bullet_count[0]].left = player[0].right;
+								player_bullet[player_bullet_count[0]].right = player_bullet[player_bullet_count[0]].left + P_BULLETSIZE;
+							}
+							player_bullet[player_bullet_count[0]].top = player[0].top + 11;
+							player_bullet[player_bullet_count[0]].bottom = player_bullet[player_bullet_count[0]].top + P_BULLETSIZE;
+							player_bullet_count[0]++;
+						}
+						for(int i=0; i<player_bullet_count[0]; i++){
+							if(player_bullet[i].direction == WW){
+								player_bullet[i].right -= 10;
+								player_bullet[i].left = player_bullet[i].right - P_BULLETSIZE;
+							}
+							else if(player_bullet[i].direction == EE){
+								player_bullet[i].left += 10;
+								player_bullet[i].right = player_bullet[i].left + P_BULLETSIZE;
 							}
 						}
+						return false;
 					}
-					return false;
-				case BULLET_TIMER_ID:
-					if(GetAsyncKeyState(0x58) < 0) // X = Bullet
-					{
-						player_bullet[player_bullet_count[0]].direction = player_bullet_direction;
-						if(player_bullet[player_bullet_count[0]].direction == WW){
-							player_bullet[player_bullet_count[0]].right = player[0].left;
-							player_bullet[player_bullet_count[0]].left = player_bullet[player_bullet_count[0]].right - P_BULLETSIZE;
-						}
-						else if(player_bullet[player_bullet_count[0]].direction == EE){
-							player_bullet[player_bullet_count[0]].left = player[0].right;
-							player_bullet[player_bullet_count[0]].right = player_bullet[player_bullet_count[0]].left + P_BULLETSIZE;
-						}
-						player_bullet[player_bullet_count[0]].top = player[0].top + 11;
-						player_bullet[player_bullet_count[0]].bottom = player_bullet[player_bullet_count[0]].top + P_BULLETSIZE;
-						player_bullet_count[0]++;
-					}
-					for(int i=0; i<player_bullet_count[0]; i++){
-						if(player_bullet[i].direction == WW){
-							player_bullet[i].right -= 10;
-							player_bullet[i].left = player_bullet[i].right - P_BULLETSIZE;
-						}
-						else if(player_bullet[i].direction == EE){
-							player_bullet[i].left += 10;
-							player_bullet[i].right = player_bullet[i].left + P_BULLETSIZE;
-						}
-					}
-					return false;
 			}
 
 
@@ -314,7 +385,11 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 			switch(stage[0]/10)
 			{
 				case MENU:
+<<<<<<< HEAD
 					DrawMenu(hInst, hdc, backDC, menu_arrow);
+=======
+					DrawMenu(hdc, backDC, hInst, menu_arrow);
+>>>>>>> master
 					break;
 				case TUTO:
 					DrawBlockTuto(hdc,backDC,mapDC,trap,stage,hInst,map);
@@ -356,4 +431,8 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		return DefWindowProc(hWnd, message, wParam, lParam);
 	}
 	return 0;
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> master

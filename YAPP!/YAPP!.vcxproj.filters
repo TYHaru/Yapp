@@ -126,11 +126,14 @@
     <Image Include="꾸 boss.bmp">
       <Filter>리소스 파일</Filter>
     </Image>
+<<<<<<< HEAD
     <Image Include="bitmap18.bmp">
       <Filter>리소스 파일</Filter>
     </Image>
     <Image Include="뀨 Boss.bmp">
       <Filter>리소스 파일</Filter>
     </Image>
+=======
+>>>>>>> master
   </ItemGroup>
 </Project>
